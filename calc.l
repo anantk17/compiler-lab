@@ -1,16 +1,13 @@
-
 %{
 	#include <stdio.h>
 	#include "y.tab.h"
-	extern int yylval;
+	extern YYSTYPE yylval;
  
 %}
 
-plus [+]
-star [*]
 %%
 
-[0-9]+	{yylval = atoi(yytext);return DIGIT;}
+[0-9]+	{yylval.ival = atoi(yytext);return DIGIT;}
 
 [()*+-/%\n]	{return *yytext;}
 .	{}
