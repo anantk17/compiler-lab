@@ -1,23 +1,42 @@
 %{
-#include "lex.yy.c"
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include "lex.yy.c"
+
+	int yylex(void);
 %}
 
-%token NUM
+%token DIGIT
+%left '+' '-' 
+%left '*' '/' '%'
 
 %%
 
-start: expr '\n'	{exit(1);}
+start : expr '\n'	{printf("%d",$1);exit(1);}
 	;
 
-expr:	expr '+' expr
-	| expr '*' expr
-	| '(' expr ')'
-	| NUM
+expr : expr '+' expr	{$$ = $1 + $3;}
+	|expr '-' expr 	{$$ = $1 - $3;}
+	| expr '*' expr {$$ = $1 * $3;}
+	| expr '/' expr {$$ = $1 / $3;}
+	| expr '%' expr {$$ = $1 % $3;}
+	| '(' expr ')'  {$$ = $2;} 
+	| DIGIT {$$ = $1;}
 	;
 
 %%
 
-int main(void)
+yyerror()
 {
-	return yyparse();
+	printf("error");
+	return ;
 }
+
+
+int main()
+{
+	yyparse();
+	return 1;
+}
+
+

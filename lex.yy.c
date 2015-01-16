@@ -455,8 +455,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "test.l"
-#line 3 "test.l"
+#line 1 "calc.l"
+#line 3 "calc.l"
 	#include <stdio.h>
 	#include "y.tab.h"
 	extern int yylval;
@@ -648,7 +648,7 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 11 "test.l"
+#line 11 "calc.l"
 
 
 #line 655 "lex.yy.c"
@@ -736,23 +736,23 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 13 "test.l"
+#line 13 "calc.l"
 {yylval = atoi(yytext);return DIGIT;}
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 15 "test.l"
+#line 15 "calc.l"
 {return *yytext;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 16 "test.l"
+#line 16 "calc.l"
 {}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 17 "test.l"
+#line 17 "calc.l"
 ECHO;
 	YY_BREAK
 #line 759 "lex.yy.c"
@@ -1753,7 +1753,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 17 "test.l"
+#line 17 "calc.l"
 
 
 

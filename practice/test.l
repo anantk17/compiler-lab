@@ -12,7 +12,7 @@ star [*]
 
 [0-9]+	{yylval = atoi(yytext);return DIGIT;}
 
-[*+/-%\n]	{return *yytext;}
+[()*+-/%\n]	{return *yytext;}
 .	{}
 %%
 
