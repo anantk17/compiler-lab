@@ -46,11 +46,31 @@ extern int yydebug;
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     DIGIT = 258
+     DIGIT = 258,
+     EQUAL = 259,
+     ID = 260,
+     READ = 261,
+     WRITE = 262,
+     IF = 263,
+     THEN = 264,
+     ENDIF = 265,
+     WHILE = 266,
+     DO = 267,
+     ENDWHILE = 268
    };
 #endif
 /* Tokens.  */
 #define DIGIT 258
+#define EQUAL 259
+#define ID 260
+#define READ 261
+#define WRITE 262
+#define IF 263
+#define THEN 264
+#define ENDIF 265
+#define WHILE 266
+#define DO 267
+#define ENDWHILE 268
 
 
 
@@ -58,14 +78,15 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2053 of yacc.c  */
-#line 67 "calc.y"
+#line 184 "stlpi.y"
 
- int ival;
- struct tree_node *nptr;
+    int ival;
+    char name;
+    struct tree_node *nptr;
 
 
 /* Line 2053 of yacc.c  */
-#line 69 "y.tab.h"
+#line 90 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
