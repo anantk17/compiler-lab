@@ -9,8 +9,8 @@
 
 [0-9]+  {yylval.ival = atoi(yytext);return DIGIT;}
 [a-z]   {yylval.name = yytext[0];return  ID;}
-[-<>()*+\n;=]    {return *yytext;}
-"=="    {yylval.name =yytext[0];return EQUAL;}
+[/-<>()*+\n;=]    {return *yytext;}
+"=="    {return EQUALITY;}
 read    {return READ;}
 write   {return WRITE;}
 if      {return IF;}

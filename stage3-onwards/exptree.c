@@ -75,10 +75,10 @@ int exp_evaluate(struct tree_node* node)
     {
         switch(node->type)
         {
-            case 0:
+            case CNUMBER:
                 return node->value;
                 break;
-            case 1:
+            case CID:
                 return variables[node->name-'a'];
                 break;
             case '+':
@@ -87,7 +87,9 @@ int exp_evaluate(struct tree_node* node)
             case '-':
                 return exp_evaluate(node->ptr1) - exp_evaluate(node->ptr2);
                 break;
-
+            case '/':
+                return exp_evaluate(node->ptr1) - exp_evaluate(node->ptr2);
+                break;
             case '*':
                 return exp_evaluate(node->ptr1) * exp_evaluate(node->ptr2);
                 break;

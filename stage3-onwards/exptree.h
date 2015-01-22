@@ -1,3 +1,6 @@
+//Constants for the type attribute of the tree node
+#define CNUMBER 0
+#define CID 1
 #define CSLIST 2
 #define ASSG 3
 #define CREAD 4
