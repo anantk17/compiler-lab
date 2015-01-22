@@ -1,36 +1,8 @@
-%{
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include "lex.yy.c"
-    #include "exptree.h"
-    
- /*   #define CSLIST 2
-    #define ASSG 3
-    #define CREAD 4
-    #define CWRITE 5
-    #define CWHILE 6
-    #define CIF 7
-    #define ISEQUAL 8
-*/
-    int yylex(void);
-    
-    /*int variables[26];
+#include "exptree.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-    struct tree_node{
-        //type : 0 - NUMBER, 1 - ID ,2 - SLIST, 3 - ASSG, 4 - READ, 5 - WRITE, '+' - Addition, '*'
-        //-Multiplication, '-' - Subtraction
-        int type;
-        //if type is 1, name defines identifier name
-        char name;
-        //integer value of number at node, valid only if type is 0
-        int value;
-        //argument name
-        struct tree_node *arglist;
-        //ptr1 and ptr2 are NULL for leaf nodes
-        struct tree_node *ptr1, *ptr2;
-    };
-
-    struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr2)
+struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr2)
     {
         struct tree_node *node = (struct tree_node*) malloc(sizeof(struct tree_node));
         if(!node)
@@ -45,7 +17,7 @@
         return node;
     }
 
-    struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node* ptr2)
+struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node* ptr2)
     {
 
         struct tree_node *node = (struct tree_node*) malloc(sizeof(struct tree_node));
@@ -70,7 +42,7 @@
         return node;
     }
 
-    struct tree_node* mkID(char name)
+struct tree_node* mkID(char name)
     {
         struct tree_node *node = (struct tree_node*)malloc(sizeof(struct tree_node));
         if(!node)  
@@ -85,7 +57,7 @@
         return node;
     }
 
-    struct tree_node* mkNUM(int val)
+struct tree_node* mkNUM(int val)
     {
         struct tree_node* node = (struct tree_node*)malloc(sizeof(struct tree_node));
         if(!node)
@@ -99,8 +71,7 @@
         
         return node;
     }
-    
-    int exp_evaluate(struct tree_node* node)
+int exp_evaluate(struct tree_node* node)
     {
         switch(node->type)
         {
@@ -141,7 +112,7 @@
         }
     }
 
-    void evaluate(struct tree_node* node)
+void evaluate(struct tree_node* node)
     {
         if(node->type == CSLIST)
         {
@@ -178,72 +149,4 @@
         }
             return;
     }
-*/
-    
-%}
 
-%union{
-    int ival;
-    char name;
-    struct tree_node *nptr;
-};
-
-%token <ival> DIGIT;
-%token <ival> EQUAL
-%token <name> ID;
-%token <nptr> READ;
-%token <nptr> WRITE;
-%token <nptr> IF
-%token <nptr> THEN
-%token <nptr> ENDIF
-%token <nptr> WHILE
-%token <nptr> DO
-%token <nptr> ENDWHILE
-%type <nptr> slist;
-%type <nptr> stmt;
-%type <nptr> E;
-
-%left EQUAL
-%left '>' '<'
-%left '+' '-'
-%left '*' '/' '%'
-
-%%
-
-start : slist '\n'  {evaluate($1);exit(0);}
-      ;
-
-slist : stmt    {$$ = $1;}
-        | slist stmt  {$$ = mkstmtNode(CSLIST,$1,$2);}
-      ;
-
-stmt : ID '=' E ';'   {$$ = mkstmtNode(ASSG,mkID($1),$3);}
-     | READ '(' ID ')'';'  {$$ = mkstmtNode(CREAD,mkID($3), NULL);}
-     | WRITE '(' E ')'';'  {$$ = mkstmtNode(CWRITE,$3, NULL);}
-     | IF '(' E ')' THEN slist ENDIF ';' {$$ = mkstmtNode(CIF,$3,$6);}
-     | WHILE '(' E ')' DO slist ENDWHILE ';' {$$ = mkstmtNode(CWHILE,$3,$6);}
-     ;
-E : E '+' E   {$$ = mkOpNode('+',$1,$3);}
-  | E '-' E   {$$ = mkOpNode('-',$1,$3);}
-  | E '*' E   {$$ = mkOpNode('*',$1,$3);}
-  | E '>' E   {$$ = mkOpNode('>',$1,$3);}
-  | E '<' E   {$$ = mkOpNode('<',$1,$3);}
-  | E EQUAL E {$$ = mkOpNode(ISEQUAL,$1,$3);}
-  | '('E')'     {$$ = $2;}
-  | DIGIT     {$$ = mkNUM($1);}
-  | ID      {$$ = mkID($1);}
-  ;
-
-%%
-
-yyerror()
-{
-    printf("error");
-    return ;
-}
-
-int main()
-{
-    yyparse();
-    return 1;
-    }

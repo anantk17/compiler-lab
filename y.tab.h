@@ -78,7 +78,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2053 of yacc.c  */
-#line 184 "stlpi.y"
+#line 185 "stlpi.y"
 
     int ival;
     char name;

@@ -68,6 +68,7 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include "lex.yy.c"
+    #include "exptree.h"
     
     #define CSLIST 2
     #define ASSG 3
@@ -79,7 +80,7 @@
 
     int yylex(void);
     
-    int variables[26];
+    /*int variables[26];
 
     struct tree_node{
         //type : 0 - NUMBER, 1 - ID ,2 - SLIST, 3 - ASSG, 4 - READ, 5 - WRITE, '+' - Addition, '*'
@@ -237,17 +238,17 @@
             int ret = exp_evaluate(node->ptr1);
             while(exp_evaluate(node->ptr1))
             {
-                evaluate(node->ptr2);
+                evaluate(node->ptr2);               
                 ret = exp_evaluate(node->ptr1);
              }
         }
             return;
     }
-
+*/
     
 
 /* Line 371 of yacc.c  */
-#line 251 "y.tab.c"
+#line 252 "y.tab.c"
 
 # ifndef YY_NULL
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -315,7 +316,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 387 of yacc.c  */
-#line 184 "stlpi.y"
+#line 185 "stlpi.y"
 
     int ival;
     char name;
@@ -323,7 +324,7 @@ typedef union YYSTYPE
 
 
 /* Line 387 of yacc.c  */
-#line 327 "y.tab.c"
+#line 328 "y.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -351,7 +352,7 @@ int yyparse ();
 /* Copy the second part of user declarations.  */
 
 /* Line 390 of yacc.c  */
-#line 355 "y.tab.c"
+#line 356 "y.tab.c"
 
 #ifdef short
 # undef short
@@ -655,8 +656,8 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,   212,   212,   215,   216,   219,   220,   221,   222,   223,
-     225,   226,   227,   228,   229,   230,   231,   232,   233
+       0,   213,   213,   216,   217,   220,   221,   222,   223,   224,
+     226,   227,   228,   229,   230,   231,   232,   233,   234
 };
 #endif
 
@@ -1577,109 +1578,109 @@ yyreduce:
     {
         case 2:
 /* Line 1787 of yacc.c  */
-#line 212 "stlpi.y"
+#line 213 "stlpi.y"
     {evaluate((yyvsp[(1) - (2)].nptr));exit(0);}
     break;
 
   case 3:
 /* Line 1787 of yacc.c  */
-#line 215 "stlpi.y"
+#line 216 "stlpi.y"
     {(yyval.nptr) = (yyvsp[(1) - (1)].nptr);}
     break;
 
   case 4:
 /* Line 1787 of yacc.c  */
-#line 216 "stlpi.y"
+#line 217 "stlpi.y"
     {(yyval.nptr) = mkstmtNode(CSLIST,(yyvsp[(1) - (2)].nptr),(yyvsp[(2) - (2)].nptr));}
     break;
 
   case 5:
 /* Line 1787 of yacc.c  */
-#line 219 "stlpi.y"
+#line 220 "stlpi.y"
     {(yyval.nptr) = mkstmtNode(ASSG,mkID((yyvsp[(1) - (4)].name)),(yyvsp[(3) - (4)].nptr));}
     break;
 
   case 6:
 /* Line 1787 of yacc.c  */
-#line 220 "stlpi.y"
+#line 221 "stlpi.y"
     {(yyval.nptr) = mkstmtNode(CREAD,mkID((yyvsp[(3) - (5)].name)), NULL);}
     break;
 
   case 7:
 /* Line 1787 of yacc.c  */
-#line 221 "stlpi.y"
+#line 222 "stlpi.y"
     {(yyval.nptr) = mkstmtNode(CWRITE,(yyvsp[(3) - (5)].nptr), NULL);}
     break;
 
   case 8:
 /* Line 1787 of yacc.c  */
-#line 222 "stlpi.y"
+#line 223 "stlpi.y"
     {(yyval.nptr) = mkstmtNode(CIF,(yyvsp[(3) - (8)].nptr),(yyvsp[(6) - (8)].nptr));}
     break;
 
   case 9:
 /* Line 1787 of yacc.c  */
-#line 223 "stlpi.y"
+#line 224 "stlpi.y"
     {(yyval.nptr) = mkstmtNode(CWHILE,(yyvsp[(3) - (8)].nptr),(yyvsp[(6) - (8)].nptr));}
     break;
 
   case 10:
 /* Line 1787 of yacc.c  */
-#line 225 "stlpi.y"
+#line 226 "stlpi.y"
     {(yyval.nptr) = mkOpNode('+',(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 11:
 /* Line 1787 of yacc.c  */
-#line 226 "stlpi.y"
+#line 227 "stlpi.y"
     {(yyval.nptr) = mkOpNode('-',(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 12:
 /* Line 1787 of yacc.c  */
-#line 227 "stlpi.y"
+#line 228 "stlpi.y"
     {(yyval.nptr) = mkOpNode('*',(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 13:
 /* Line 1787 of yacc.c  */
-#line 228 "stlpi.y"
+#line 229 "stlpi.y"
     {(yyval.nptr) = mkOpNode('>',(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 14:
 /* Line 1787 of yacc.c  */
-#line 229 "stlpi.y"
+#line 230 "stlpi.y"
     {(yyval.nptr) = mkOpNode('<',(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 15:
 /* Line 1787 of yacc.c  */
-#line 230 "stlpi.y"
+#line 231 "stlpi.y"
     {(yyval.nptr) = mkOpNode(ISEQUAL,(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 16:
 /* Line 1787 of yacc.c  */
-#line 231 "stlpi.y"
+#line 232 "stlpi.y"
     {(yyval.nptr) = (yyvsp[(2) - (3)].nptr);}
     break;
 
   case 17:
 /* Line 1787 of yacc.c  */
-#line 232 "stlpi.y"
+#line 233 "stlpi.y"
     {(yyval.nptr) = mkNUM((yyvsp[(1) - (1)].ival));}
     break;
 
   case 18:
 /* Line 1787 of yacc.c  */
-#line 233 "stlpi.y"
+#line 234 "stlpi.y"
     {(yyval.nptr) = mkID((yyvsp[(1) - (1)].name));}
     break;
 
 
 /* Line 1787 of yacc.c  */
-#line 1683 "y.tab.c"
+#line 1684 "y.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1911,7 +1912,7 @@ yyreturn:
 
 
 /* Line 2050 of yacc.c  */
-#line 236 "stlpi.y"
+#line 237 "stlpi.y"
 
 
 yyerror()
