@@ -36,3 +36,5 @@ int exp_evaluate(struct tree_node* node);
 void evaluate(struct tree_node* node);
 
 int variables[26];
+
+int initialized[26];

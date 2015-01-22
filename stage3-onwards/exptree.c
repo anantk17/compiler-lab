@@ -79,8 +79,14 @@ int exp_evaluate(struct tree_node* node)
                 return node->value;
                 break;
             case CID:
-                return variables[node->name-'a'];
-                break;
+                if(initialized[node->name-'a'])
+                    return variables[node->name-'a'];
+                else
+                {
+                    printf("uninitialized variable used!!");
+                    exit(1);
+                    break;
+                }
             case '+':
                 return exp_evaluate(node->ptr1) + exp_evaluate(node->ptr2);
                 break;
@@ -125,10 +131,12 @@ void evaluate(struct tree_node* node)
         {
             int rhs = exp_evaluate(node->ptr2);
             variables[node->ptr1->name -'a'] = rhs;
+            initialized[node->ptr1->name-'a'] = 1;
         }
         else if(node->type == CREAD)
         {
             scanf("%d",&variables[node->arglist->name -'a']);
+            initialized[node->arglist->name-'a'] = 1;
         }
         else if(node->type == CWRITE)
         {
