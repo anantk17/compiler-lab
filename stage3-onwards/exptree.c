@@ -158,7 +158,7 @@ void evaluate(struct tree_node* node)
     else if(node->type == CWHILE)
     {
         int ret = exp_evaluate(node->ptr1);
-        while(exp_evaluate(node->ptr1))
+        while(ret)
         {
             evaluate(node->ptr2);               
             ret = exp_evaluate(node->ptr1);

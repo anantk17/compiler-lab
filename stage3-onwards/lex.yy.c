@@ -820,7 +820,7 @@ YY_RULE_SETUP
 case 13:
 YY_RULE_SETUP
 #line 22 "slpi.l"
-{return *yytext;}
+{}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
