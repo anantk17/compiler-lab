@@ -100,7 +100,7 @@ int exp_evaluate(struct tree_node* node)
             return exp_evaluate(node->ptr1) - exp_evaluate(node->ptr2);
             break;
         case '/':
-            return exp_evaluate(node->ptr1) - exp_evaluate(node->ptr2);
+            return exp_evaluate(node->ptr1) / exp_evaluate(node->ptr2);
             break;
         case '*':
             return exp_evaluate(node->ptr1) * exp_evaluate(node->ptr2);
