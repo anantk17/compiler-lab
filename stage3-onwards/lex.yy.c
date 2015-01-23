@@ -824,11 +824,7 @@ YY_RULE_SETUP
 case 13:
 YY_RULE_SETUP
 #line 22 "slpi.l"
-<<<<<<< HEAD
-{return *yytext;}
-=======
 {yylval.name = yytext; return ID;}
->>>>>>> ce8c3a82679b694d7b11617b87526c8c037e500c
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
