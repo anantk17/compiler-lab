@@ -18,11 +18,12 @@
 %token <nptr> READ WRITE IF THEN ENDIF WHILE DO ENDWHILE
 %type <nptr> slist stmt E
 
+%right '='
 %left EQUALITY
 %left '>' '<'
 %left '+' '-'
 %left '*' '/' '%'
-%right '='
+%left '(' ')'
 
 %%
 
