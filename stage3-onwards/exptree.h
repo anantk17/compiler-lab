@@ -13,7 +13,7 @@ struct tree_node{
     //type takes one of the constants defined above and denotes the type of node
     int type;
     //name is required if node is of type CID
-    char name;
+    //char name;
     //integer value of number at node, valid only if type is CNUMBER
     int value;
     //list of nodes passed as arguments to functions 
@@ -21,13 +21,15 @@ struct tree_node{
     //ptr1 and ptr2 are pointers to child nodes
     //NULL in case of leaf nodes (NUM or ID)
     struct tree_node *ptr1, *ptr2;
+    //Pointer to entry in symbol table
+    struct Gsymbol* symbol;
     };
 
 struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr2);
 
 struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node* ptr2);
 
-struct tree_node* mkID(char name);
+struct tree_node* mkID(char* name);
 
 struct tree_node* mkNUM(int val);
 

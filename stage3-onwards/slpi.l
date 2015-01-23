@@ -8,7 +8,6 @@
 %%
 
 [0-9]+  {yylval.ival = atoi(yytext);return DIGIT;}
-[a-z]   {yylval.name = yytext[0];return  ID;}
 [/-<>()*+\n;=]    {return *yytext;}
 "=="    {return EQUALITY;}
 read    {return READ;}
@@ -19,6 +18,8 @@ endif   {return ENDIF;}
 while   {return WHILE;}
 do      {return DO;}
 endwhile {return ENDWHILE;}
+integer {return TINTEGER;}
+[A-Za-z][A-Za-z0-9]* {yylval.name = yytext; return ID;}
 .   {}
 
 %%

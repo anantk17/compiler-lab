@@ -3,19 +3,20 @@
     #include <stdlib.h>
     #include "lex.yy.c"
     #include "exptree.h"
-    
+    #include "symboltable.h"
+
    int yylex(void);    
 %}
 
 %union{
     int ival;
-    char name;
+    char* name;
     struct tree_node *nptr;
 };
 
 %token <ival> DIGIT EQUAL
 %token <name> ID
-%token <nptr> READ WRITE IF THEN ENDIF WHILE DO ENDWHILE
+%token <nptr> READ WRITE IF THEN ENDIF WHILE DO ENDWHILE TINTEGER
 %type <nptr> slist stmt E
 
 %right '='
@@ -34,7 +35,8 @@ slist : stmt    {$$ = $1;}
         | slist stmt  {$$ = mkstmtNode(CSLIST,$1,$2);}
       ;
 
-stmt : ID '=' E ';'   {$$ = mkstmtNode(ASSG,mkID($1),$3);}
+stmt : TINTEGER ID ';'  {if(Glookup($2) == NULL) {Ginstall($2,INT,1);} else {printf("Redeclaration of variable %s",$2);exit(1);}}
+     | ID '=' E ';'   {$$ = mkstmtNode(ASSG,mkID($1),$3);}
      | READ '(' ID ')'';'  {$$ = mkstmtNode(CREAD,mkID($3), NULL);}
      | WRITE '(' E ')'';'  {$$ = mkstmtNode(CWRITE,$3, NULL);}
      | IF '(' E ')' THEN slist ENDIF ';' {$$ = mkstmtNode(CIF,$3,$6);}

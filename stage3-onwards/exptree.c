@@ -1,4 +1,5 @@
 #include "exptree.h"
+#include "symboltable.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -10,7 +11,7 @@ struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr
         printf("malloc failed");
     node->type = op;
     node->value = 0;
-    node->name = 0;
+    //node->name = 0;
     node->arglist = NULL;
     node->ptr1 = ptr1;
     node->ptr2 = ptr2;
@@ -27,11 +28,11 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
         printf("malloc failed");
     node->type = stmt;
     node->value = 0;
-    node->name = 0;
+    //node->name = 0;
     if(stmt == CREAD||stmt == CWRITE)
     {
-        node->arglist = ptr1;
-        node->ptr1 = NULL;
+        node->arglist = NULL;
+        node->ptr1 = ptr1;
         node->ptr2 = NULL;
     }
     else
@@ -45,19 +46,30 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
 }
 
 //Create leaf nodes for IDENTIFIERS
-struct tree_node* mkID(char name)
+struct tree_node* mkID(char* name)
 {
-    struct tree_node *node = (struct tree_node*)malloc(sizeof(struct tree_node));
-    if(!node)  
-        printf("malloc failed");
-    node->type = 1;
-    node->value = 0;
-    node->name = name;
-    node->arglist = NULL;
-    node->ptr1 = NULL;
-    node->ptr2 = NULL;
+    struct Gsymbol* symbol;
+    symbol = Glookup(name);
+    if(symbol == NULL)
+    {
+        struct tree_node *node = (struct tree_node*)malloc(sizeof(struct tree_node));
+        if(!node)  
+            printf("malloc failed");
+        node->type = 1;
+        node->value = 0;
+        //node->name = name;
+        node->arglist = NULL;
+        node->symbol = symbol;
+        node->ptr1 = NULL;
+        node->ptr2 = NULL;
     
-    return node;
+        return node;
+    }
+    else
+    {
+        printf("Identifier %s used without prior declaration!!\n",name);
+        exit(1);
+    }
 }
 
 //Create leaf nodes for NUMBERS
@@ -68,8 +80,9 @@ struct tree_node* mkNUM(int val)
         printf("malloc failed");
     node->type = 0;
     node->value = val;
-    node->name = 0;
+    //node->name = 0;
     node->arglist = NULL;
+    node->symbol = NULL;
     node->ptr1 = NULL;
     node->ptr2 = NULL;
     
@@ -85,14 +98,16 @@ int exp_evaluate(struct tree_node* node)
             return node->value;
             break;
         case CID:
-            if(initialized[node->name-'a'])
-                return variables[node->name-'a'];
-            else
+            //if(initialized[node->name-'a'])
+            //return variables[node->name-'a'];
+            return *(node->symbol->binding);
+            /*else
             {
                 printf("uninitialized variable used!!");
                 exit(1);
                 break;
-            }
+            }*/
+            break;
         case '+':
             return exp_evaluate(node->ptr1) + exp_evaluate(node->ptr2);
             break;
@@ -137,17 +152,20 @@ void evaluate(struct tree_node* node)
     else if(node->type == ASSG)
     {
         int rhs = exp_evaluate(node->ptr2);
-        variables[node->ptr1->name -'a'] = rhs;
-        initialized[node->ptr1->name-'a'] = 1;
+        *(node->ptr1->symbol->binding) = rhs;
+        //variables[node->ptr1->name -'a'] = rhs;
+        //initialized[node->ptr1->name-'a'] = 1;
     }
     else if(node->type == CREAD)
     {
-        scanf("%d",&variables[node->arglist->name -'a']);
-        initialized[node->arglist->name-'a'] = 1;
+        /*if(Glookup(node->ptr1->symbol->binding) == NULL)
+            printf("Undeclared variable %s used!!\n",name*/
+        scanf("%d",node->ptr1->symbol->binding);
+        //initialized[node->arglist->name-'a'] = 1;
     }
     else if(node->type == CWRITE)
     {
-        int rhs = exp_evaluate(node->arglist);
+        int rhs = exp_evaluate(node->ptr1);
         printf("%d\n",rhs);
     }
     else if(node->type == CIF)
@@ -162,7 +180,7 @@ void evaluate(struct tree_node* node)
         {
             evaluate(node->ptr2);               
             ret = exp_evaluate(node->ptr1);
-            }
+        }
     }
         return;
 }
