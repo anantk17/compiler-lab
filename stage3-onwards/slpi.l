@@ -8,7 +8,7 @@
 %%
 
 [0-9]+  {yylval.ival = atoi(yytext);return DIGIT;}
-[/-<>()*+\n;=]    {return *yytext;}
+[\[\],/-<>()*+;=]    {return *yytext;}
 "=="    {return EQUALITY;}
 read    {return READ;}
 write   {return WRITE;}
@@ -18,13 +18,15 @@ endif   {return ENDIF;}
 while   {return WHILE;}
 do      {return DO;}
 endwhile {return ENDWHILE;}
-integer {return TINTEGER;}
-[A-Za-z][A-Za-z0-9]* {yylval.name = yytext; return ID;}
+integer {return INTEGER;}
+decl[\t\n]    {return DECL;}
+enddecl[\t\n] {return ENDDECL;}
+[A-Za-z][A-Za-z0-9]* {yylval.name = strdup(yytext);return ID;}
 .   {}
 
 %%
 
-yywrap()
+int yywrap(void)
 {
     return 1;
 }

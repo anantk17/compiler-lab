@@ -3,7 +3,6 @@
 #include <string.h>
 
 struct SymbolTable st;
-
 struct Gsymbol* Glookup(char* name)
 {
     struct Gsymbol* temp;
@@ -42,5 +41,14 @@ void Ginstall(char* name, int type, int size)
         symbol->next = NULL;
 
         temp->next = symbol;
+    }
+}
+
+void print_st()
+{
+    struct Gsymbol* temp;
+    for(temp = st.head;temp!=NULL;temp = temp->next)
+    {
+            printf("%s\n",temp->name);
     }
 }

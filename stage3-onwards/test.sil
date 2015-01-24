@@ -1,0 +1,16 @@
+decl
+    integer q[10],i;
+enddecl
+i=0;
+while(i < 10) 
+do
+read(q[i]);
+write(i);
+i = i + 1;
+endwhile;
+i=0;
+while(i < 10)
+do
+write(q[i]);
+i=i+1;
+endwhile;

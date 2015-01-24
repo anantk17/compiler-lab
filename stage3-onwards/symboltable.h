@@ -18,3 +18,5 @@ struct SymbolTable
 struct Gsymbol* Glookup(char* name);
 
 void Ginstall(char* name, int type,int size);
+
+void print_st();

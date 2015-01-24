@@ -5,7 +5,8 @@
     #include "exptree.h"
     #include "symboltable.h"
 
-   int yylex(void);    
+   int yylex(void); 
+   extern struct SymbolTable st;
 %}
 
 %union{
@@ -16,8 +17,8 @@
 
 %token <ival> DIGIT EQUAL
 %token <name> ID
-%token <nptr> READ WRITE IF THEN ENDIF WHILE DO ENDWHILE TINTEGER
-%type <nptr> slist stmt E
+%token <nptr> READ WRITE IF THEN ENDIF WHILE DO ENDWHILE INTEGER DECL ENDDECL
+%type <nptr> slist stmt E IDT
 
 %right '='
 %left EQUALITY
@@ -28,20 +29,35 @@
 
 %%
 
-start : slist '\n'  {evaluate($1);exit(0);}
+start : gdecl slist  {evaluate($2);exit(0);}
+      ;
+gdecl   :   DECL decllist ENDDECL {}
+        ;
+
+decllist : decl decllist {}
+         | decl {}
+         ;
+
+decl :  INTEGER idlist ';'  {}
+     ;
+
+idlist : ID ',' idlist {if(Glookup($1)==NULL){Ginstall($1,INT,1);} else {printf("Redeclaration of variable%s",$1);exit(1);}} 
+       | ID '[' DIGIT ']' ',' idlist {if(Glookup($1)==NULL){Ginstall($1,INT,$3);} else {printf("Redeclaration of variable%s",$1);exit(1);}} 
+       | ID {if(Glookup($1)==NULL) {Ginstall($1,INT,1);} else {printf("Redeclaration of variable %s",$1);exit(1);}}
+       | ID '[' DIGIT ']' {if(Glookup($1)== NULL) {Ginstall($1,INT,$3);}  else {printf("Redeclaration of variable %s",$1);exit(1);}}
+       ;
+
+slist : stmt slist   {$$ = mkstmtNode(CSLIST,$1,$2);}
+        | stmt {$$=$1;}
       ;
 
-slist : stmt    {$$ = $1;}
-        | slist stmt  {$$ = mkstmtNode(CSLIST,$1,$2);}
-      ;
-
-stmt : TINTEGER ID ';'  {if(Glookup($2) == NULL) {Ginstall($2,INT,1);} else {printf("Redeclaration of variable %s",$2);exit(1);}}
-     | ID '=' E ';'   {$$ = mkstmtNode(ASSG,mkID($1),$3);}
-     | READ '(' ID ')'';'  {$$ = mkstmtNode(CREAD,mkID($3), NULL);}
+stmt : IDT '=' E ';'   {$$ = mkstmtNode(ASSG,$1,$3);}
+     | READ '(' IDT ')'';'  {$$ = mkstmtNode(CREAD,$3, NULL);}
      | WRITE '(' E ')'';'  {$$ = mkstmtNode(CWRITE,$3, NULL);}
      | IF '(' E ')' THEN slist ENDIF ';' {$$ = mkstmtNode(CIF,$3,$6);}
      | WHILE '(' E ')' DO slist ENDWHILE ';' {$$ = mkstmtNode(CWHILE,$3,$6);}
      ;
+
 E : E '+' E   {$$ = mkOpNode('+',$1,$3);}
   | E '-' E   {$$ = mkOpNode('-',$1,$3);}
   | E '*' E   {$$ = mkOpNode('*',$1,$3);}
@@ -51,9 +67,12 @@ E : E '+' E   {$$ = mkOpNode('+',$1,$3);}
   | E EQUALITY E {$$ = mkOpNode(ISEQUAL,$1,$3);}
   | '('E')'     {$$ = $2;}
   | DIGIT     {$$ = mkNUM($1);}
-  | ID      {$$ = mkID($1);}
+  | IDT      {$$ = $1;}
   ;
 
+IDT : ID    {$$ = mkID($1,NULL);}
+    | ID '[' E ']'  {$$ = mkID($1,$3);}
+    ;
 %%
 
 yyerror()
@@ -62,8 +81,11 @@ yyerror()
     return ;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
+    yyin = fopen(argv[1],"r");
+    st.head = NULL;
     yyparse();
+    fclose(yyin);
     return 1;
     }

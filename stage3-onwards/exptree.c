@@ -46,19 +46,19 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
 }
 
 //Create leaf nodes for IDENTIFIERS
-struct tree_node* mkID(char* name)
+struct tree_node* mkID(char* name,struct tree_node* offset_expr)
 {
     struct Gsymbol* symbol;
     symbol = Glookup(name);
-    if(symbol == NULL)
+    if(symbol != NULL)
     {
         struct tree_node *node = (struct tree_node*)malloc(sizeof(struct tree_node));
         if(!node)  
             printf("malloc failed");
         node->type = 1;
         node->value = 0;
-        //node->name = name;
         node->arglist = NULL;
+        node->offset = offset_expr;
         node->symbol = symbol;
         node->ptr1 = NULL;
         node->ptr2 = NULL;
@@ -67,7 +67,7 @@ struct tree_node* mkID(char* name)
     }
     else
     {
-        printf("Identifier %s used without prior declaration!!\n",name);
+        printf("Identifier not declared %s!!\n",name);
         exit(1);
     }
 }
@@ -92,21 +92,16 @@ struct tree_node* mkNUM(int val)
 //Evaluates expression nodes
 int exp_evaluate(struct tree_node* node)
 {
+    if(node == NULL)
+        return 0;
+
     switch(node->type)
     {
         case CNUMBER:
             return node->value;
             break;
         case CID:
-            //if(initialized[node->name-'a'])
-            //return variables[node->name-'a'];
-            return *(node->symbol->binding);
-            /*else
-            {
-                printf("uninitialized variable used!!");
-                exit(1);
-                break;
-            }*/
+            return *(node->symbol->binding + exp_evaluate(node->offset));
             break;
         case '+':
             return exp_evaluate(node->ptr1) + exp_evaluate(node->ptr2);
@@ -152,7 +147,7 @@ void evaluate(struct tree_node* node)
     else if(node->type == ASSG)
     {
         int rhs = exp_evaluate(node->ptr2);
-        *(node->ptr1->symbol->binding) = rhs;
+        *(node->ptr1->symbol->binding + exp_evaluate(node->ptr1->offset)) = rhs;
         //variables[node->ptr1->name -'a'] = rhs;
         //initialized[node->ptr1->name-'a'] = 1;
     }
@@ -160,7 +155,7 @@ void evaluate(struct tree_node* node)
     {
         /*if(Glookup(node->ptr1->symbol->binding) == NULL)
             printf("Undeclared variable %s used!!\n",name*/
-        scanf("%d",node->ptr1->symbol->binding);
+        scanf("%d",node->ptr1->symbol->binding + exp_evaluate(node->ptr1->offset));
         //initialized[node->arglist->name-'a'] = 1;
     }
     else if(node->type == CWRITE)
@@ -176,7 +171,7 @@ void evaluate(struct tree_node* node)
     else if(node->type == CWHILE)
     {
         int ret = exp_evaluate(node->ptr1);
-        while(exp_evaluate(node->ptr1))
+        while(ret)
         {
             evaluate(node->ptr2);               
             ret = exp_evaluate(node->ptr1);
