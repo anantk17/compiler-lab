@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//extern struct SymbolTable st;
+
 //Create operator nodes
 struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr2)
 {
@@ -178,4 +180,62 @@ void evaluate(struct tree_node* node)
         }
     }
         return;
+}
+
+struct tree_node* mkDeclNode(int decl_type,struct tree_node* ptr1, struct tree_node* ptr2)
+{
+    struct tree_node* Node = (struct tree_node*) malloc(sizeof(struct tree_node));
+    Node->type = decl_type;
+    Node->ptr1 = ptr1;
+    Node->ptr2 = ptr2;
+}
+
+struct tree_node* mkDeclNode1(int decl_type,int data_type,struct tree_node* ptr1)
+{
+    struct tree_node* Node = (struct tree_node*) malloc(sizeof(struct tree_node));
+    struct tree_node* LeftNode = (struct tree_node*)malloc(sizeof(struct tree_node));
+    LeftNode->type = DATA_TYPE;
+    LeftNode->data_type = INT;
+
+    Node->type = CIDLIST;
+    Node->ptr1 = LeftNode;
+    Node->ptr2 = ptr1;
+}
+
+void declare_type(struct tree_node* root, int data_type)
+{
+    if(root-type == CIDLIST)
+    {
+        declare_type(root->ptr1);
+        declare_type(root->ptr2,data_type);
+    }
+    else if(root->type == DID)
+    {
+       if(Glookup(root->name))
+       {
+            printf("Error!!!. Identifier %s already declared previously.",root->name);
+            exit(1);
+       }
+       else
+       {
+            Ginstall(root->name,root->date_type,root->size);
+       }
+    }
+}
+
+void declare(struct tree_node* root)
+{
+    if(root->type == CDECLIST)
+    {
+        declare(root->left);
+        declare(root->right);
+    }
+    else if(root->type == CDECL)
+    {
+        if(root->data_type == INT)
+        {
+            declare_type(root->ptr1,INT);
+            declare(root->ptr2);
+        }        
+    }
 }

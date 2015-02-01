@@ -29,22 +29,20 @@
 
 %%
 
-start : gdecl slist  {evaluate($2);exit(0);}
+start : gdecl slist  {declare($1);evaluate($2);exit(0);}
       ;
-gdecl   :   DECL decllist ENDDECL {}
+gdecl   :   DECL decllist ENDDECL {$$ = $2;}
         ;
 
-decllist : decl decllist {}
-         | decl {}
+decllist : decl decllist {$$ = mkDeclNode(CDECLIST,$1,$2);}
+         | decl {$$=$1;}
          ;
 
-decl :  INTEGER idlist ';'  {}
+decl :  INTEGER idlist ';'  {$$ = mkDeclNode1(CDECL,INT,$2);}
      ;
 
-idlist : ID ',' idlist {if(Glookup($1)==NULL){Ginstall($1,INT,1);} else {printf("Redeclaration of variable%s",$1);exit(1);}} 
-       | ID '[' DIGIT ']' ',' idlist {if(Glookup($1)==NULL){Ginstall($1,INT,$3);} else {printf("Redeclaration of variable%s",$1);exit(1);}} 
-       | ID {if(Glookup($1)==NULL) {Ginstall($1,INT,1);} else {printf("Redeclaration of variable %s",$1);exit(1);}}
-       | ID '[' DIGIT ']' {if(Glookup($1)== NULL) {Ginstall($1,INT,$3);}  else {printf("Redeclaration of variable %s",$1);exit(1);}}
+idlist : DECLID ',' idlist {$$ = mkDeclNode(CIDLIST,$1,$3);}  
+       | DECLID {$$ = $1;}
        ;
 
 slist : stmt slist   {$$ = mkstmtNode(CSLIST,$1,$2);}
@@ -69,6 +67,10 @@ E : E '+' E   {$$ = mkOpNode('+',$1,$3);}
   | DIGIT     {$$ = mkNUM($1);}
   | IDT      {$$ = $1;}
   ;
+
+DECLID : ID {$$ = mkDeclID(DID,$1,,0);}
+       | ID '[' DIGIT ']' {$$ = mkDeclID(DID,$1,$3);}
+       ;
 
 IDT : ID    {$$ = mkID($1,NULL);}
     | ID '[' E ']'  {$$ = mkID($1,$3);}

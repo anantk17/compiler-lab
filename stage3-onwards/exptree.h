@@ -8,6 +8,11 @@
 #define CWHILE 6    //WHILE(COND)
 #define CIF 7       //IF(COND)
 #define ISEQUAL 8   //==
+#define INT 0       //INTEGER TYPE
+#define CIDLIST 10  //IDLIST
+#define CDECLIST 11 //DECLARATION LIST
+#define CDECL   12  //DECLARATION
+#define DID 13      //ID
 
 struct tree_node{ 
     //type takes one of the constants defined above and denotes the type of node
@@ -38,6 +43,14 @@ struct tree_node* mkNUM(int val);
 int exp_evaluate(struct tree_node* node);
 
 void evaluate(struct tree_node* node);
+
+struct tree_node* mkDeclNode(int decl_type,struct tree_node* ptr1, struct tree_node* ptr2);
+
+struct tree_node* mkDeclNode1(int decl_type,int data_type,struct tree_node* ptr1);
+
+void declare(struct tree_node* root);
+
+void declare_type(struct tree_node* root,int data_type);
 
 //table for storing the current value for the variables a-z
 int variables[26];
