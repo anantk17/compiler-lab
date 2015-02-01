@@ -1,5 +1,6 @@
 #include "symboltable.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 struct SymbolTable st;
@@ -24,7 +25,7 @@ void Ginstall(char* name, int type, int size)
         symbol->name = name;
         symbol->type = type;
         symbol->size = size;
-        if(type == 0)
+        //if(type == 0)
             symbol->binding= (int*)malloc(sizeof(int)*size);
         symbol->next = NULL;
 
@@ -38,7 +39,7 @@ void Ginstall(char* name, int type, int size)
         symbol->name = name;
         symbol->type = type;
         symbol->size = size;
-        if(type == 0)
+        //if(type == 0)
             symbol->binding= (int*)malloc(sizeof(int)*size);
         symbol->next = NULL;
 

@@ -18,7 +18,7 @@
 %token <ival> DIGIT EQUAL
 %token <name> ID
 %token <nptr> READ WRITE IF THEN ENDIF WHILE DO ENDWHILE INTEGER DECL ENDDECL
-%type <nptr> slist stmt E IDT
+%type <nptr> slist stmt gdecl idlist E IDT DECLID decllist decl
 
 %right '='
 %left EQUALITY
@@ -68,7 +68,7 @@ E : E '+' E   {$$ = mkOpNode('+',$1,$3);}
   | IDT      {$$ = $1;}
   ;
 
-DECLID : ID {$$ = mkDeclID(DID,$1,,0);}
+DECLID : ID {$$ = mkDeclID(DID,$1,1);}
        | ID '[' DIGIT ']' {$$ = mkDeclID(DID,$1,$3);}
        ;
 

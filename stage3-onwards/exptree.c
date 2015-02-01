@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//extern struct SymbolTable st;
+extern struct SymbolTable st;
 
 //Create operator nodes
 struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr2)
@@ -50,10 +50,6 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
 //Create leaf nodes for IDENTIFIERS
 struct tree_node* mkID(char* name,struct tree_node* offset_expr)
 {
-    struct Gsymbol* symbol;
-    symbol = Glookup(name);
-    if(symbol != NULL)
-    {
         struct tree_node *node = (struct tree_node*)malloc(sizeof(struct tree_node));
         if(!node)  
             printf("malloc failed");
@@ -61,17 +57,12 @@ struct tree_node* mkID(char* name,struct tree_node* offset_expr)
         node->value = 0;
         node->arglist = NULL;
         node->offset = offset_expr;
-        node->symbol = symbol;
+        node->name = name;
+        //node->symbol = symbol;
         node->ptr1 = NULL;
         node->ptr2 = NULL;
     
         return node;
-    }
-    else
-    {
-        printf("Identifier not declared %s!!\n",name);
-        exit(1);
-    }
 }
 
 //Create leaf nodes for NUMBERS
@@ -94,6 +85,7 @@ struct tree_node* mkNUM(int val)
 //Evaluates expression nodes
 int exp_evaluate(struct tree_node* node)
 {
+    struct Gsymbol* ret;
     if(node == NULL)
         return 0;
 
@@ -103,7 +95,17 @@ int exp_evaluate(struct tree_node* node)
             return node->value;
             break;
         case CID:
-            return *(node->symbol->binding + exp_evaluate(node->offset));
+            ret = Glookup(node->name);
+            if(ret != NULL)
+            {
+                node->symbol = ret;
+                return *(node->symbol->binding + exp_evaluate(node->offset));
+            }
+            else
+            {
+                printf("Undeclared identifier %s",node->name);
+                exit(1);
+            }
             break;
         case '+':
             return exp_evaluate(node->ptr1) + exp_evaluate(node->ptr2);
@@ -149,16 +151,30 @@ void evaluate(struct tree_node* node)
     else if(node->type == ASSG)
     {
         int rhs = exp_evaluate(node->ptr2);
-        *(node->ptr1->symbol->binding + exp_evaluate(node->ptr1->offset)) = rhs;
-        //variables[node->ptr1->name -'a'] = rhs;
-        //initialized[node->ptr1->name-'a'] = 1;
+        struct Gsymbol* ret = Glookup(node->ptr1->name);
+        if(ret != NULL)
+        {
+            node->ptr1->symbol = ret;
+            *(node->ptr1->symbol->binding + exp_evaluate(node->ptr1->offset)) = rhs;
+        }
+        else
+        {
+            printf("Unknown identifier %s",node->ptr1->name);
+            exit(1);
+        }
     }
     else if(node->type == CREAD)
     {
-        /*if(Glookup(node->ptr1->symbol->binding) == NULL)
-            printf("Undeclared variable %s used!!\n",name*/
-        scanf("%d",node->ptr1->symbol->binding + exp_evaluate(node->ptr1->offset));
-        //initialized[node->arglist->name-'a'] = 1;
+        struct Gsymbol* ret = Glookup(node->ptr1->name);
+        if(ret != NULL)
+        {
+            node->ptr1->symbol = ret;
+            scanf("%d",node->ptr1->symbol->binding + exp_evaluate(node->ptr1->offset));
+        }
+        else
+        {
+            printf("Undeclared variable %s used!!\n",node->name);
+        }
     }
     else if(node->type == CWRITE)
     {
@@ -188,25 +204,38 @@ struct tree_node* mkDeclNode(int decl_type,struct tree_node* ptr1, struct tree_n
     Node->type = decl_type;
     Node->ptr1 = ptr1;
     Node->ptr2 = ptr2;
+
+    return Node;
 }
 
 struct tree_node* mkDeclNode1(int decl_type,int data_type,struct tree_node* ptr1)
 {
     struct tree_node* Node = (struct tree_node*) malloc(sizeof(struct tree_node));
-    struct tree_node* LeftNode = (struct tree_node*)malloc(sizeof(struct tree_node));
-    LeftNode->type = DATA_TYPE;
-    LeftNode->data_type = INT;
 
-    Node->type = CIDLIST;
-    Node->ptr1 = LeftNode;
-    Node->ptr2 = ptr1;
+    Node->type = decl_type;
+    Node->data_type = data_type;
+    //Node->ptr1 = LeftNode;
+    Node->ptr1 = ptr1;
+
+    return Node;
+}
+
+struct tree_node* mkDeclID(int decl_type, char* name, int size)
+{
+    struct tree_node* Node = (struct tree_node*) malloc(sizeof(struct tree_node));
+    Node->type = decl_type;
+    Node->size = size;
+    Node->name = name;
+
+    return Node;
 }
 
 void declare_type(struct tree_node* root, int data_type)
 {
-    if(root-type == CIDLIST)
+
+    if(root->type == CIDLIST)
     {
-        declare_type(root->ptr1);
+        declare_type(root->ptr1,data_type);
         declare_type(root->ptr2,data_type);
     }
     else if(root->type == DID)
@@ -214,28 +243,28 @@ void declare_type(struct tree_node* root, int data_type)
        if(Glookup(root->name))
        {
             printf("Error!!!. Identifier %s already declared previously.",root->name);
-            exit(1);
+            exit(2);
        }
        else
        {
-            Ginstall(root->name,root->date_type,root->size);
+            Ginstall(root->name,data_type,root->size);
        }
     }
 }
 
 void declare(struct tree_node* root)
-{
+{   
     if(root->type == CDECLIST)
     {
-        declare(root->left);
-        declare(root->right);
+        declare(root->ptr1);
+        declare(root->ptr2);
     }
     else if(root->type == CDECL)
     {
         if(root->data_type == INT)
         {
             declare_type(root->ptr1,INT);
-            declare(root->ptr2);
+            //declare(root->ptr2);
         }        
     }
 }
