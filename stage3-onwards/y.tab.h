@@ -57,7 +57,10 @@ extern int yydebug;
      WHILE = 266,
      DO = 267,
      ENDWHILE = 268,
-     EQUALITY = 269
+     INTEGER = 269,
+     DECL = 270,
+     ENDDECL = 271,
+     EQUALITY = 272
    };
 #endif
 /* Tokens.  */
@@ -72,7 +75,10 @@ extern int yydebug;
 #define WHILE 266
 #define DO 267
 #define ENDWHILE 268
-#define EQUALITY 269
+#define INTEGER 269
+#define DECL 270
+#define ENDDECL 271
+#define EQUALITY 272
 
 
 
@@ -80,15 +86,15 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2053 of yacc.c  */
-#line 10 "slpi.y"
+#line 12 "slpi.y"
 
     int ival;
-    char name;
+    char* name;
     struct tree_node *nptr;
 
 
 /* Line 2053 of yacc.c  */
-#line 92 "y.tab.h"
+#line 98 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
