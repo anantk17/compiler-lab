@@ -30,7 +30,7 @@
 %%
 
 start : gdecl slist
-      {declare($1);evadeclare($1)declare($1)declare($1)declare($1)declare($1)declare($1)declare($1)declare($1)declare($1)declare($1)declare($1)declare($1)declare($1)declare($1);;;;;;;;;;;;;;luate($2);exit(0);}
+      {declare($1);evaluate($2);exit(0);}
       ;
 gdecl   :   DECL decllist ENDDECL {$$ = $2;}
         ;
@@ -39,7 +39,7 @@ decllist : decl decllist {$$ = mkDeclNode(CDECLIST,$1,$2);}
          | decl {$$=$1;}
          ;
 
-decl :  INTEGER idlist ';'  {$$ = mkDeclNode1(CDECL,INT,$2);}
+decl :  INTEGER idlist ';'  {$$ = mkIdListNode(CDECL,INT,$2);}
      ;
 
 idlist : DECLID ',' idlist {$$ = mkDeclNode(CIDLIST,$1,$3);}  

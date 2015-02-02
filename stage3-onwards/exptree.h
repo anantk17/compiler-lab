@@ -48,7 +48,7 @@ void evaluate(struct tree_node* node);
 
 struct tree_node* mkDeclNode(int decl_type,struct tree_node* ptr1, struct tree_node* ptr2);
 
-struct tree_node* mkDeclNode1(int decl_type,int data_type,struct tree_node* ptr1);
+struct tree_node* mkIdListNode(int decl_type,int data_type,struct tree_node* ptr1);
 
 struct tree_node* mkDeclID(int decl_type,char* name,int size);
 

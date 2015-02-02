@@ -208,7 +208,7 @@ struct tree_node* mkDeclNode(int decl_type,struct tree_node* ptr1, struct tree_n
     return Node;
 }
 
-struct tree_node* mkDeclNode1(int decl_type,int data_type,struct tree_node* ptr1)
+struct tree_node* mkIdListNode(int decl_type,int data_type,struct tree_node* ptr1)
 {
     struct tree_node* Node = (struct tree_node*) malloc(sizeof(struct tree_node));
 
