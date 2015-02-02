@@ -21,6 +21,7 @@ endwhile {return ENDWHILE;}
 integer {return INTEGER;}
 decl[\t\n]    {return DECL;}
 enddecl[\t\n] {return ENDDECL;}
+[ \t\n]     {}
 [A-Za-z][A-Za-z0-9]* {yylval.name = strdup(yytext);return ID;}
 .   {}
 

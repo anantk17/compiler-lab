@@ -29,7 +29,8 @@
 
 %%
 
-start : gdecl slist  {declare($1);evaluate($2);exit(0);}
+start : gdecl slist
+      {declare($1);evadeclare($1)declare($1)declare($1)declare($1)declare($1)declare($1)declare($1)declare($1)declare($1)declare($1)declare($1)declare($1)declare($1)declare($1);;;;;;;;;;;;;;luate($2);exit(0);}
       ;
 gdecl   :   DECL decllist ENDDECL {$$ = $2;}
         ;
