@@ -78,7 +78,7 @@ E : E '+' E   {$$ = mkOpNode('+',$1,$3);}
   | '('E')'     {$$ = $2;}
   | DIGIT     {$$ = mkNUM($1);}
   | IDT      {$$ = $1;}
-  | BOOL     {$$ = mkBool($1);} 
+  | BOL     {$$ = mkBool($1);} 
   ;
 
 DECLID : ID {$$ = mkDeclID(DID,$1,1);}

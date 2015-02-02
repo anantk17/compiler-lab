@@ -20,19 +20,20 @@ struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr
 
     if(op == CAND || op == COR || op == CNOT)
     {
-        if((data_type(node->ptr1->symbol) != BOOL) || (data_type(node->ptr1->symbol) != data_type(node->ptr2->symbol)))
+        if((node->ptr1->data_type != BOOL) || (node->ptr2->data_type != node->ptr1->data_type))
         {
             printf("Incorrect data type for %d operator",op);
         }
     }
     else
     {
-        if((data_type(node->ptr1->symbol) != INT) || (data_type(node->ptr1->symbol) != data_type(node->ptr2->symbol)))
+        if((node->ptr1->data_type != INT) || (node->ptr1->data_type != node->ptr2->data_type))
         {
             printf("Incorrect data type for %d operator",op);
         }
 
     }
+
     return node;
 }
 
@@ -52,7 +53,22 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
         node->ptr1 = ptr1;
         node->ptr2 = NULL;
     }
-    else
+    else if(stmt == ASSG)
+    {
+        node->arglist = NULL;
+        node->ptr1 = ptr1;
+        node->ptr2 = ptr2;
+
+        if(node->ptr1->data_type != node->ptr2->data_type)
+        {
+            printf("ERROR!!!: type mismatch\n");
+            exit(5);
+        }
+    }
+    else if(stmt == CIF || stmt == CWHILE)
+    {
+        if(node->ptr1->data_type = BOOL)
+    }
     {
         node->arglist = NULL;
         node->ptr1 = ptr1;
@@ -80,6 +96,7 @@ struct tree_node* mkID(char* name,struct tree_node* offset_expr)
         node->arglist = NULL;
         node->offset = offset_expr;
         node->name = name;
+        node->data_type = ret->type;
         node->symbol = ret;
         node->ptr1 = NULL;
         node->ptr2 = NULL;
@@ -133,17 +150,7 @@ int exp_evaluate(struct tree_node* node)
             return node->value;
             break;
         case CID:
-            //ret = Glookup(node->name);
-            //if(ret != NULL)
-            //{
-                //node->symbol = ret;
-                return *(node->symbol->binding + exp_evaluate(node->offset));
-            //}
-            //else
-            //{
-            //    printf("Undeclared identifier %s",node->name);
-            ///    exit(1);
-            //}
+            return *(node->symbol->binding + exp_evaluate(node->offset));
             break;
         case '+':
             return exp_evaluate(node->ptr1) + exp_evaluate(node->ptr2);
@@ -192,35 +199,37 @@ void evaluate(struct tree_node* node)
     else if(node->type == ASSG)
     {
         int rhs = exp_evaluate(node->ptr2);
-        //struct Gsymbol* ret = Glookup(node->ptr1->name);
-        //if(ret != NULL)
-       // {
-       //     node->ptr1->symbol = ret;
-            *(node->ptr1->symbol->binding + exp_evaluate(node->ptr1->offset)) = rhs;
-       // }
-       // else
-       // {
-       //     printf("Unknown identifier %s",node->ptr1->name);
-       //     exit(1);
-       // }
+        *(node->ptr1->symbol->binding + exp_evaluate(node->ptr1->offset)) = rhs;
     }
     else if(node->type == CREAD)
     {
-        //struct Gsymbol* ret = Glookup(node->ptr1->name);
-        //if(ret != NULL)
-        //{
-            //node->ptr1->symbol = ret;
-            scanf("%d",node->ptr1->symbol->binding + exp_evaluate(node->ptr1->offset));
-        //}
-        //else
-        //{
-        //    printf("Undeclared variable %s used!!\n",node->name);
-        //}
+            if(node->ptr1->data_type == INT)
+                scanf("%d",node->ptr1->symbol->binding + exp_evaluate(node->ptr1->offset));
+            else
+            {
+                char temp[6];
+                scanf("%s",temp);
+                if(strcmp(temp,"TRUE") == 0)
+                    *(node->ptr1->symbol->binding + exp_evaluate(node->prt1->offset)) = 1;
+                else if(strcmp(temp,"FALSE") == 0)
+                    *(node->ptr1->symbol->binding + exp_evaluate(node->ptr1->offset)) = 0;
+                else
+                {
+                    printf("Invalid value for boolean identifier %s",node->ptr1->name);
+                    exit(5);
+                }
+            }
     }
     else if(node->type == CWRITE)
     {
         int rhs = exp_evaluate(node->ptr1);
-        printf("%d\n",rhs);
+        if(node->ptr1->data_type == INT)
+            printf("%d\n",rhs);
+        else
+            if(rhs == 0)
+                printf("FALSE\n");
+            else
+                printf("TRUE\n");
     }
     else if(node->type == CIF)
     {

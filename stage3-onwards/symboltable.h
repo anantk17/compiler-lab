@@ -1,5 +1,6 @@
 #define INT 0
 #define BOOL 1
+#define VOID 2
 
 struct Gsymbol
 {

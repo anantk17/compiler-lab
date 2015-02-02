@@ -12,8 +12,8 @@
 "AND"   {return AND;}
 "OR"    {return OR;}
 "NOT"   {return NOT;}
-"TRUE"  {yylval.ival = 1;return BOOL;}
-"FALSE" {yylval.ival = 0;return BOOL;}
+"TRUE"  {yylval.ival = 1;return BOL;}
+"FALSE" {yylval.ival = 0;return BOL;}
 "!="    {return NOTEQUAL;}
 "<="    {return LTE;}
 ">="    {return GTE;}
