@@ -8,7 +8,7 @@
 %%
 
 [0-9]+  {printf("DIGIT\t %s\t",yytext);}
-[,/-<>()*+\n;=]    {printf("%s\t",yytext);}
+[,-<>()*+\n;=%/]    {printf("%s\t",yytext);}
 "=="    {printf("EQUALITY\t");}
 read    {printf("READ\t");}
 write   {printf("WRITE\t");}
