@@ -1,16 +1,13 @@
 decl
-    integer q[10],i;
+    integer q[10],i,sum;
 enddecl
-
 i=0;
+sum=0;
 while(i < 10) 
 do
 read(q[i]);
+sum=sum+q[i];
 i = i + 1;
 endwhile;
 i=0;
-while(i < 10)
-do
-write(q[i]);
-i=i+1;
-endwhile;
+write(sum);
