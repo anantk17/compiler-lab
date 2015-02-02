@@ -1,5 +1,5 @@
-slpi: y.tab.c exptree.c lex.yy.c symboltable.c
-	gcc -g -o slpi y.tab.c exptree.c symboltable.c -ll
+slpi: y.tab.c exptree.o lex.yy.c symboltable.o
+	gcc -g -o slpi y.tab.c exptree.o symboltable.o -ll
 
 lex.yy.c : slpi.l
 	lex slpi.l
@@ -12,3 +12,6 @@ y.tab.c : slpi.y
 
 symboltable.o :	symboltable.c symboltable.h
 	gcc -g -c symboltable.c
+
+clean:
+	$(RM) y.tab.* slpi lex.yy.c exptree.o symboltable.o

@@ -8,8 +8,8 @@
 #define CWHILE 6    //WHILE(COND)
 #define CIF 7       //IF(COND)
 #define ISEQUAL 8   //==
-#define INT 0       //INTEGER TYPE
-#define BOOL 1      //BOOLEAN TYPE
+//#define INT 0       //INTEGER TYPE
+//#define BOOL 1      //BOOLEAN TYPE
 #define CIDLIST 10  //IDLIST
 #define CDECLIST 11 //DECLARATION LIST
 #define CDECL   12  //DECLARATION
@@ -17,7 +17,7 @@
 #define CLTE 14     //LESS THAN OR EQUAL TO
 #define CGTE 15     //GREATER THAN OR EQUAL TO
 #define ISNTEQUAL 16//NOT EQUAL TO
-#define CBOOl 17    //BOOLEAN
+#define CBOOL 17    //BOOLEAN
 #define CAND 18     //AND
 #define COR 19      //OR
 #define CNOT 20     //NOT

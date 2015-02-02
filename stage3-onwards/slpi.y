@@ -15,9 +15,9 @@
     struct tree_node *nptr;
 };
 
-%token <ival> DIGIT EQUAL
+%token <ival> DIGIT EQUAL BOL
 %token <name> ID
-%token <nptr> READ WRITE IF THEN ENDIF WHILE DO ENDWHILE INTEGER DECL ENDDECL
+%token <nptr> READ WRITE IF THEN ENDIF WHILE DO ENDWHILE INTEGER DECL ENDDECL BOOLEAN
 %type <nptr> slist stmt gdecl idlist E IDT DECLID decllist decl
 
 %right '='
@@ -43,7 +43,7 @@ decllist : decl decllist {$$ = mkDeclNode(CDECLIST,$1,$2);}
          ;
 
 decl :  INTEGER idlist ';'  {$$ = mkIdListNode(CDECL,INT,$2);}
-     |  BOOLEAN idlist ';'  {$$ = mkIdListNode(CDECL,BOL,$3);}
+     |  BOOLEAN idlist ';'  {$$ = mkIdListNode(CDECL,BOOL,$2);}
      ;
 
 idlist : DECLID ',' idlist {$$ = mkDeclNode(CIDLIST,$1,$3);}  
@@ -74,7 +74,7 @@ E : E '+' E   {$$ = mkOpNode('+',$1,$3);}
   | E NOTEQUAL E {$$ = mkOpNode(ISNTEQUAL,$1,$3);} 
   | E AND E {$$ = mkOpNode(CAND,$1,$3);}
   | E OR E  {$$ = mkOpNode(COR,$1,$3);}
-  | NOT E   {$$ = mkOpNode(CNOT,$1,$3);}
+  | NOT E   {$$ = mkOpNode(CNOT,$2,NULL);}
   | '('E')'     {$$ = $2;}
   | DIGIT     {$$ = mkNUM($1);}
   | IDT      {$$ = $1;}

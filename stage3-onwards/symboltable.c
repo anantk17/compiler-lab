@@ -56,7 +56,7 @@ int data_type(struct Gsymbol* var)
     }
     else
     {
-        return var-type;
+        return var->type;
     }
 }
 

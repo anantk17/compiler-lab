@@ -27,6 +27,7 @@ while   {return WHILE;}
 do      {return DO;}
 endwhile {return ENDWHILE;}
 integer {return INTEGER;}
+boolean {return BOOLEAN;}
 decl[\t\n]    {return DECL;}
 enddecl[\t\n] {return ENDDECL;}
 [ \t\n]     {}

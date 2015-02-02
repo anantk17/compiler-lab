@@ -1,7 +1,13 @@
 decl
     integer q[10],i,sum;
+    boolean a,b;
 enddecl
 i=0;
+a=TRUE;
+b = FALSE;
+write(a AND b);
+write(a OR b);
+write(NOT a);
 sum=0;
 while(i < 10) 
 do
@@ -11,4 +17,3 @@ i = i + 1;
 endwhile;
 i=0;
 write(sum);
-write(b);

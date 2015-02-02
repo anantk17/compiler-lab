@@ -24,6 +24,7 @@ struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr
         {
             printf("Incorrect data type for %d operator",op);
         }
+        node->data_type = BOOL;
     }
     else
     {
@@ -31,6 +32,11 @@ struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr
         {
             printf("Incorrect data type for %d operator",op);
         }
+
+        if(op == '+' || op == '-' || op == '*' || op == '/' || op == '%')
+            node->data_type = INT;
+        else
+            node->data_type = BOOL;
 
     }
 
@@ -67,8 +73,17 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
     }
     else if(stmt == CIF || stmt == CWHILE)
     {
-        if(node->ptr1->data_type = BOOL)
+        node->arglist = NULL;
+        node->ptr1 = ptr1;
+        node->ptr2 = ptr2;
+
+        if(node->ptr1->data_type != BOOL)
+        {
+            printf("Error!!!: type mismatch\n");
+            exit(6);
+        }
     }
+    else
     {
         node->arglist = NULL;
         node->ptr1 = ptr1;
@@ -185,6 +200,11 @@ int exp_evaluate(struct tree_node* node)
             else
                 return 0;
             break;
+        case CAND:
+            return exp_evaluate(node->ptr1) && exp_evaluate(node->ptr2);
+            break;
+        case COR:
+            return exp_evaluate(node->ptr1) 
     }
 }
 
@@ -210,7 +230,7 @@ void evaluate(struct tree_node* node)
                 char temp[6];
                 scanf("%s",temp);
                 if(strcmp(temp,"TRUE") == 0)
-                    *(node->ptr1->symbol->binding + exp_evaluate(node->prt1->offset)) = 1;
+                    *(node->ptr1->symbol->binding + exp_evaluate(node->ptr1->offset)) = 1;
                 else if(strcmp(temp,"FALSE") == 0)
                     *(node->ptr1->symbol->binding + exp_evaluate(node->ptr1->offset)) = 0;
                 else
@@ -311,10 +331,6 @@ void declare(struct tree_node* root)
     }
     else if(root->type == CDECL)
     {
-        if(root->data_type == INT)
-        {
-            declare_type(root->ptr1,INT);
-            //declare(root->ptr2);
-        }        
+        declare_type(root->ptr1,root->data_type);    
     }
 }
