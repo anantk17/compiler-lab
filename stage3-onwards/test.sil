@@ -11,3 +11,4 @@ i = i + 1;
 endwhile;
 i=0;
 write(sum);
+write(b);

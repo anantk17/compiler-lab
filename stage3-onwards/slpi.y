@@ -21,18 +21,21 @@
 %type <nptr> slist stmt gdecl idlist E IDT DECLID decllist decl
 
 %right '='
-%left EQUALITY
-%left '>' '<'
+%left OR
+%left AND
+%left EQUALITY NOTEQUAL
+%left '>' '<' LTE GTE
 %left '+' '-'
 %left '*' '/' '%'
+%right NOT
 %left '(' ')'
 
 %%
 
 start : gdecl slist
-      {declare($1);evaluate($2);exit(0);}
+      {/*declare($1);*/evaluate($2);exit(0);}
       ;
-gdecl   :   DECL decllist ENDDECL {$$ = $2;}
+gdecl   :   DECL decllist ENDDECL {$$ = $2;declare($$);}
         ;
 
 decllist : decl decllist {$$ = mkDeclNode(CDECLIST,$1,$2);}
@@ -61,9 +64,14 @@ E : E '+' E   {$$ = mkOpNode('+',$1,$3);}
   | E '-' E   {$$ = mkOpNode('-',$1,$3);}
   | E '*' E   {$$ = mkOpNode('*',$1,$3);}
   | E '/' E   {$$ = mkOpNode('/',$1,$3);}
+  | E '%' E   {$$ = mkOpNode('%',$1,$3);}
   | E '>' E   {$$ = mkOpNode('>',$1,$3);}
+  | E LTE E   {$$ = mkOpNode(CLTE,$1,$3);
   | E '<' E   {$$ = mkOpNode('<',$1,$3);}
   | E EQUALITY E {$$ = mkOpNode(ISEQUAL,$1,$3);}
+  | E LTE E   {$$ = mkOpNode(LTE,$1,$3);}
+  | E GTE E   {$$ = mkOpNode(GTE,$1,$3);}
+  | E NOTEQUAL E {$$ = mkOpNode(ISNTEQUAL,$1,$3);} 
   | '('E')'     {$$ = $2;}
   | DIGIT     {$$ = mkNUM($1);}
   | IDT      {$$ = $1;}

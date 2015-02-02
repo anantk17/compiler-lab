@@ -119,6 +119,9 @@ int exp_evaluate(struct tree_node* node)
         case '*':
             return exp_evaluate(node->ptr1) * exp_evaluate(node->ptr2);
             break;
+	case '%':
+	    return exp_evaluate(node->ptr1) % exp_evaluate(node->ptr2);
+            break;
         case '<':
             if(exp_evaluate(node->ptr1) < exp_evaluate(node->ptr2))
                 return 1;
