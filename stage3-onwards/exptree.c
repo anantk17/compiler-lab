@@ -18,9 +18,17 @@ struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr
     node->ptr1 = ptr1;
     node->ptr2 = ptr2;
 
-    if(op == CAND || op == COR || op == CNOT)
+    if(op == CAND || op == COR)
     {
         if((node->ptr1->data_type != BOOL) || (node->ptr2->data_type != node->ptr1->data_type))
+        {
+            printf("Incorrect data type for %d operator",op);
+        }
+        node->data_type = BOOL;
+    }
+    else if(op == CNOT)
+    {
+        if((node->ptr1->data_type != BOOL))
         {
             printf("Incorrect data type for %d operator",op);
         }
@@ -164,6 +172,9 @@ int exp_evaluate(struct tree_node* node)
         case CNUMBER:
             return node->value;
             break;
+        case CBOOL:
+            return node->value;
+            break;
         case CID:
             return *(node->symbol->binding + exp_evaluate(node->offset));
             break;
@@ -204,7 +215,11 @@ int exp_evaluate(struct tree_node* node)
             return exp_evaluate(node->ptr1) && exp_evaluate(node->ptr2);
             break;
         case COR:
-            return exp_evaluate(node->ptr1) 
+            return exp_evaluate(node->ptr1) || exp_evaluate(node->ptr2);
+            break;
+        case CNOT:
+            return !(exp_evaluate(node->ptr1));
+            break;
     }
 }
 
