@@ -59,7 +59,13 @@ extern int yydebug;
     INTEGER = 269,
     DECL = 270,
     ENDDECL = 271,
-    EQUALITY = 272
+    OR = 272,
+    AND = 273,
+    EQUALITY = 274,
+    NOTEQUAL = 275,
+    LTE = 276,
+    GTE = 277,
+    NOT = 278
   };
 #endif
 /* Tokens.  */
@@ -77,7 +83,13 @@ extern int yydebug;
 #define INTEGER 269
 #define DECL 270
 #define ENDDECL 271
-#define EQUALITY 272
+#define OR 272
+#define AND 273
+#define EQUALITY 274
+#define NOTEQUAL 275
+#define LTE 276
+#define GTE 277
+#define NOT 278
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -90,7 +102,7 @@ union YYSTYPE
     char* name;
     struct tree_node *nptr;
 
-#line 94 "y.tab.h" /* yacc.c:1909  */
+#line 106 "y.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

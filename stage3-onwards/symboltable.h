@@ -1,4 +1,5 @@
 #define INT 0
+#define BOOL 1
 
 struct Gsymbol
 {
@@ -18,5 +19,7 @@ struct SymbolTable
 struct Gsymbol* Glookup(char* name);
 
 void Ginstall(char* name, int type,int size);
+
+int data_type(struct Gsymbol* var);
 
 void print_st();

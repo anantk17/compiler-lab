@@ -18,6 +18,21 @@ struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr
     node->ptr1 = ptr1;
     node->ptr2 = ptr2;
 
+    if(op == CAND || op == COR || op == CNOT)
+    {
+        if((data_type(node->ptr1->symbol) != BOOL) || (data_type(node->ptr1->symbol) != data_type(node->ptr2->symbol)))
+        {
+            printf("Incorrect data type for %d operator",op);
+        }
+    }
+    else
+    {
+        if((data_type(node->ptr1->symbol) != INT) || (data_type(node->ptr1->symbol) != data_type(node->ptr2->symbol)))
+        {
+            printf("Incorrect data type for %d operator",op);
+        }
+
+    }
     return node;
 }
 
@@ -50,15 +65,22 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
 //Create leaf nodes for IDENTIFIERS
 struct tree_node* mkID(char* name,struct tree_node* offset_expr)
 {
+        struct Gsymbol* ret = Glookup(name);
+        if(ret == NULL)
+        {
+            printf("Error: Undeclared variable used\n");
+            exit(3);
+        }
+
         struct tree_node *node = (struct tree_node*)malloc(sizeof(struct tree_node));
         if(!node)  
             printf("malloc failed");
-        node->type = 1;
+        node->type = CID;
         node->value = 0;
         node->arglist = NULL;
         node->offset = offset_expr;
         node->name = name;
-        //node->symbol = symbol;
+        node->symbol = ret;
         node->ptr1 = NULL;
         node->ptr2 = NULL;
     
@@ -71,9 +93,9 @@ struct tree_node* mkNUM(int val)
     struct tree_node* node = (struct tree_node*)malloc(sizeof(struct tree_node));
     if(!node)
         printf("malloc failed");
-    node->type = 0;
+    node->type = CNUMBER;
     node->value = val;
-    //node->name = 0;
+    node->data_type = INT;
     node->arglist = NULL;
     node->symbol = NULL;
     node->ptr1 = NULL;
@@ -82,6 +104,22 @@ struct tree_node* mkNUM(int val)
     return node;
 }
 
+struct tree_node* mkBool(int val)
+{
+    struct tree_node* node = (struct tree_node*)malloc(sizeof(struct tree_node));
+    if(!node)
+        printf("malloc failed");
+    node->type = CBOOL;
+    node->value = val;
+    node->data_type = BOOL;
+    node->arglist = NULL;
+    node->symbol = NULL;
+    node->ptr1 = NULL;
+    node->ptr2 = NULL;
+    
+    return node;
+ 
+}
 //Evaluates expression nodes
 int exp_evaluate(struct tree_node* node)
 {
@@ -95,17 +133,17 @@ int exp_evaluate(struct tree_node* node)
             return node->value;
             break;
         case CID:
-            ret = Glookup(node->name);
-            if(ret != NULL)
-            {
-                node->symbol = ret;
+            //ret = Glookup(node->name);
+            //if(ret != NULL)
+            //{
+                //node->symbol = ret;
                 return *(node->symbol->binding + exp_evaluate(node->offset));
-            }
-            else
-            {
-                printf("Undeclared identifier %s",node->name);
-                exit(1);
-            }
+            //}
+            //else
+            //{
+            //    printf("Undeclared identifier %s",node->name);
+            ///    exit(1);
+            //}
             break;
         case '+':
             return exp_evaluate(node->ptr1) + exp_evaluate(node->ptr2);
@@ -154,30 +192,30 @@ void evaluate(struct tree_node* node)
     else if(node->type == ASSG)
     {
         int rhs = exp_evaluate(node->ptr2);
-        struct Gsymbol* ret = Glookup(node->ptr1->name);
-        if(ret != NULL)
-        {
-            node->ptr1->symbol = ret;
+        //struct Gsymbol* ret = Glookup(node->ptr1->name);
+        //if(ret != NULL)
+       // {
+       //     node->ptr1->symbol = ret;
             *(node->ptr1->symbol->binding + exp_evaluate(node->ptr1->offset)) = rhs;
-        }
-        else
-        {
-            printf("Unknown identifier %s",node->ptr1->name);
-            exit(1);
-        }
+       // }
+       // else
+       // {
+       //     printf("Unknown identifier %s",node->ptr1->name);
+       //     exit(1);
+       // }
     }
     else if(node->type == CREAD)
     {
-        struct Gsymbol* ret = Glookup(node->ptr1->name);
-        if(ret != NULL)
-        {
-            node->ptr1->symbol = ret;
+        //struct Gsymbol* ret = Glookup(node->ptr1->name);
+        //if(ret != NULL)
+        //{
+            //node->ptr1->symbol = ret;
             scanf("%d",node->ptr1->symbol->binding + exp_evaluate(node->ptr1->offset));
-        }
-        else
-        {
-            printf("Undeclared variable %s used!!\n",node->name);
-        }
+        //}
+        //else
+        //{
+        //    printf("Undeclared variable %s used!!\n",node->name);
+        //}
     }
     else if(node->type == CWRITE)
     {

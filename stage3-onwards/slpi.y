@@ -43,6 +43,7 @@ decllist : decl decllist {$$ = mkDeclNode(CDECLIST,$1,$2);}
          ;
 
 decl :  INTEGER idlist ';'  {$$ = mkIdListNode(CDECL,INT,$2);}
+     |  BOOLEAN idlist ';'  {$$ = mkIdListNode(CDECL,BOL,$3);}
      ;
 
 idlist : DECLID ',' idlist {$$ = mkDeclNode(CIDLIST,$1,$3);}  
@@ -66,15 +67,18 @@ E : E '+' E   {$$ = mkOpNode('+',$1,$3);}
   | E '/' E   {$$ = mkOpNode('/',$1,$3);}
   | E '%' E   {$$ = mkOpNode('%',$1,$3);}
   | E '>' E   {$$ = mkOpNode('>',$1,$3);}
-  | E LTE E   {$$ = mkOpNode(CLTE,$1,$3);
   | E '<' E   {$$ = mkOpNode('<',$1,$3);}
+  | E LTE E   {$$ = mkOpNode(CLTE,$1,$3);}
+  | E GTE E   {$$ = mkOpNode(CGTE,$1,$3);} 
   | E EQUALITY E {$$ = mkOpNode(ISEQUAL,$1,$3);}
-  | E LTE E   {$$ = mkOpNode(LTE,$1,$3);}
-  | E GTE E   {$$ = mkOpNode(GTE,$1,$3);}
   | E NOTEQUAL E {$$ = mkOpNode(ISNTEQUAL,$1,$3);} 
+  | E AND E {$$ = mkOpNode(CAND,$1,$3);}
+  | E OR E  {$$ = mkOpNode(COR,$1,$3);}
+  | NOT E   {$$ = mkOpNode(CNOT,$1,$3);}
   | '('E')'     {$$ = $2;}
   | DIGIT     {$$ = mkNUM($1);}
   | IDT      {$$ = $1;}
+  | BOOL     {$$ = mkBool($1);} 
   ;
 
 DECLID : ID {$$ = mkDeclID(DID,$1,1);}

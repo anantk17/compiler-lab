@@ -9,11 +9,18 @@
 #define CIF 7       //IF(COND)
 #define ISEQUAL 8   //==
 #define INT 0       //INTEGER TYPE
+#define BOOL 1      //BOOLEAN TYPE
 #define CIDLIST 10  //IDLIST
 #define CDECLIST 11 //DECLARATION LIST
 #define CDECL   12  //DECLARATION
 #define DID 13      //ID
-
+#define CLTE 14     //LESS THAN OR EQUAL TO
+#define CGTE 15     //GREATER THAN OR EQUAL TO
+#define ISNTEQUAL 16//NOT EQUAL TO
+#define CBOOl 17    //BOOLEAN
+#define CAND 18     //AND
+#define COR 19      //OR
+#define CNOT 20     //NOT
 struct tree_node{ 
     //type takes one of the constants defined above and denotes the type of node
     int type;
@@ -41,6 +48,8 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
 struct tree_node* mkID(char* name,struct tree_node* offset_expr);
 
 struct tree_node* mkNUM(int val);
+
+struct tree_node* mkBool(int val);
 
 int exp_evaluate(struct tree_node* node);
 

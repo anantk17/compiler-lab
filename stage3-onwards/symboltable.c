@@ -47,6 +47,19 @@ void Ginstall(char* name, int type, int size)
     }
 }
 
+int data_type(struct Gsymbol* var)
+{
+    if(var==NULL)
+    {
+        printf("Unknown identifier");
+        exit(4);
+    }
+    else
+    {
+        return var-type;
+    }
+}
+
 void print_st()
 {
     struct Gsymbol* temp;
