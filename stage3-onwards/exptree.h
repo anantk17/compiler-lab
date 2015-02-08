@@ -8,6 +8,7 @@
 #define CWHILE 6    //WHILE(COND)
 #define CIF 7       //IF(COND)
 #define ISEQUAL 8   //==
+#define CIFELSE 9   //IF ELSE
 //#define INT 0       //INTEGER TYPE
 //#define BOOL 1      //BOOLEAN TYPE
 #define CIDLIST 10  //IDLIST
@@ -36,14 +37,14 @@ struct tree_node{
     struct tree_node *arglist;
     //ptr1 and ptr2 are pointers to child nodes
     //NULL in case of leaf nodes (NUM or ID)
-    struct tree_node *ptr1, *ptr2;
+    struct tree_node *ptr1, *ptr2, *ptr3;
     //Pointer to entry in symbol table
     struct Gsymbol* symbol;
     };
 
 struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr2);
 
-struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node* ptr2);
+struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node* ptr2,struct tree_node* ptr3);
 
 struct tree_node* mkID(char* name,struct tree_node* offset_expr);
 

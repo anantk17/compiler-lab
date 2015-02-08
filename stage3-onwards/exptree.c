@@ -52,7 +52,7 @@ struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr
 }
 
 //Create statement nodes
-struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node* ptr2)
+struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node* ptr2,struct tree_node* ptr3)
 {
 
     struct tree_node *node = (struct tree_node*) malloc(sizeof(struct tree_node));
@@ -79,16 +79,21 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
             exit(5);
         }
     }
-    else if(stmt == CIF || stmt == CWHILE)
+    else if(stmt == CIF || stmt == CWHILE || stmt == CIFELSE)
     {
         node->arglist = NULL;
         node->ptr1 = ptr1;
         node->ptr2 = ptr2;
-
+        
         if(node->ptr1->data_type != BOOL)
         {
             printf("Error!!!: type mismatch\n");
             exit(6);
+        }
+
+        if(stmt == CIFELSE)
+        {
+            node->ptr3 = ptr3;
         }
     }
     else
@@ -270,6 +275,13 @@ void evaluate(struct tree_node* node)
     {
         if(exp_evaluate(node->ptr1))
             evaluate(node->ptr2);
+    }
+    else if(node->type == CIFELSE)
+    {
+        if(exp_evaluate(node->ptr1))
+            evaluate(node->ptr2);
+        else
+            evaluate(node->ptr3);
     }
     else if(node->type == CWHILE)
     {

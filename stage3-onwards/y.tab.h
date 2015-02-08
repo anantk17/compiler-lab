@@ -54,21 +54,22 @@ extern int yydebug;
      WRITE = 263,
      IF = 264,
      THEN = 265,
-     ENDIF = 266,
-     WHILE = 267,
-     DO = 268,
-     ENDWHILE = 269,
-     INTEGER = 270,
-     DECL = 271,
-     ENDDECL = 272,
-     BOOLEAN = 273,
-     OR = 274,
-     AND = 275,
-     NOTEQUAL = 276,
-     EQUALITY = 277,
-     GTE = 278,
-     LTE = 279,
-     NOT = 280
+     ELSE = 266,
+     ENDIF = 267,
+     WHILE = 268,
+     DO = 269,
+     ENDWHILE = 270,
+     INTEGER = 271,
+     DECL = 272,
+     ENDDECL = 273,
+     BOOLEAN = 274,
+     OR = 275,
+     AND = 276,
+     NOTEQUAL = 277,
+     EQUALITY = 278,
+     GTE = 279,
+     LTE = 280,
+     NOT = 281
    };
 #endif
 /* Tokens.  */
@@ -80,21 +81,22 @@ extern int yydebug;
 #define WRITE 263
 #define IF 264
 #define THEN 265
-#define ENDIF 266
-#define WHILE 267
-#define DO 268
-#define ENDWHILE 269
-#define INTEGER 270
-#define DECL 271
-#define ENDDECL 272
-#define BOOLEAN 273
-#define OR 274
-#define AND 275
-#define NOTEQUAL 276
-#define EQUALITY 277
-#define GTE 278
-#define LTE 279
-#define NOT 280
+#define ELSE 266
+#define ENDIF 267
+#define WHILE 268
+#define DO 269
+#define ENDWHILE 270
+#define INTEGER 271
+#define DECL 272
+#define ENDDECL 273
+#define BOOLEAN 274
+#define OR 275
+#define AND 276
+#define NOTEQUAL 277
+#define EQUALITY 278
+#define GTE 279
+#define LTE 280
+#define NOT 281
 
 
 
@@ -110,7 +112,7 @@ typedef union YYSTYPE
 
 
 /* Line 2053 of yacc.c  */
-#line 114 "y.tab.h"
+#line 116 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

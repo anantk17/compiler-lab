@@ -17,7 +17,7 @@
 
 %token <ival> DIGIT EQUAL BOL
 %token <name> ID
-%token <nptr> READ WRITE IF THEN ENDIF WHILE DO ENDWHILE INTEGER DECL ENDDECL BOOLEAN
+%token <nptr> READ WRITE IF THEN ELSE ENDIF WHILE DO ENDWHILE INTEGER DECL ENDDECL BOOLEAN
 %type <nptr> slist stmt gdecl idlist E IDT DECLID decllist decl
 
 %right '='
@@ -50,15 +50,16 @@ idlist : DECLID ',' idlist {$$ = mkDeclNode(CIDLIST,$1,$3);}
        | DECLID {$$ = $1;}
        ;
 
-slist : stmt slist   {$$ = mkstmtNode(CSLIST,$1,$2);}
+slist : stmt slist   {$$ = mkstmtNode(CSLIST,$1,$2,NULL);}
         | stmt {$$=$1;}
       ;
 
-stmt : IDT '=' E ';'   {$$ = mkstmtNode(ASSG,$1,$3);}
-     | READ '(' IDT ')'';'  {$$ = mkstmtNode(CREAD,$3, NULL);}
-     | WRITE '(' E ')'';'  {$$ = mkstmtNode(CWRITE,$3, NULL);}
-     | IF '(' E ')' THEN slist ENDIF ';' {$$ = mkstmtNode(CIF,$3,$6);}
-     | WHILE '(' E ')' DO slist ENDWHILE ';' {$$ = mkstmtNode(CWHILE,$3,$6);}
+stmt : IDT '=' E ';'   {$$ = mkstmtNode(ASSG,$1,$3,NULL);}
+     | READ '(' IDT ')'';'  {$$ = mkstmtNode(CREAD,$3, NULL,NULL);}
+     | WRITE '(' E ')'';'  {$$ = mkstmtNode(CWRITE,$3, NULL,NULL);}
+     | IF '(' E ')' THEN slist ENDIF ';' {$$ = mkstmtNode(CIF,$3,$6,NULL);}
+     | IF '(' E ')' THEN slist ELSE slist ENDIF ';' {$$ = mkstmtNode(CIFELSE,$3,$6,$8);}
+     | WHILE '(' E ')' DO slist ENDWHILE ';' {$$ = mkstmtNode(CWHILE,$3,$6,NULL);}
      ;
 
 E : E '+' E   {$$ = mkOpNode('+',$1,$3);}
