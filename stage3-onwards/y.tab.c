@@ -1487,7 +1487,7 @@ yyreduce:
         case 2:
 /* Line 1787 of yacc.c  */
 #line 36 "slpi.y"
-    {/*declare($1);*/evaluate((yyvsp[(2) - (2)].nptr));exit(0);}
+    {evaluate((yyvsp[(2) - (2)].nptr));exit(0);}
     break;
 
   case 3:

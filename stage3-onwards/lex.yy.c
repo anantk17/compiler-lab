@@ -379,7 +379,7 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[94] =
     {   0,
-        0,    0,   29,   27,   25,   25,   27,    2,    1,    2,
+        0,    0,   29,   27,   25,   28,   27,    2,    1,    2,
         2,    2,   26,   26,   26,   26,   26,   26,   26,   26,
        26,   26,   26,   26,   26,    8,    1,    9,   11,   10,
        26,   26,   26,   26,    4,   26,   26,   26,   19,   26,
@@ -917,7 +917,6 @@ YY_RULE_SETUP
 {return ENDDECL;}
 	YY_BREAK
 case 25:
-/* rule 25 can match eol */
 YY_RULE_SETUP
 #line 34 "slpi.l"
 {}
@@ -937,7 +936,7 @@ YY_RULE_SETUP
 #line 38 "slpi.l"
 ECHO;
 	YY_BREAK
-#line 941 "lex.yy.c"
+#line 940 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 

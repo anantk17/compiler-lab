@@ -33,7 +33,7 @@
 %%
 
 start : gdecl slist
-      {/*declare($1);*/evaluate($2);exit(0);}
+      {evaluate($2);exit(0);}
       ;
 gdecl   :   DECL decllist ENDDECL {$$ = $2;declare($$);}
         ;
