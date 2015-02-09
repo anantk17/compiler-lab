@@ -15,6 +15,7 @@ struct Gsymbol
 struct SymbolTable
 {
     struct Gsymbol* head;
+    struct Gsymbol* tail;
 };
 
 struct Gsymbol* Glookup(char* name);

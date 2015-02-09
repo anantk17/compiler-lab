@@ -18,7 +18,7 @@ struct Gsymbol* Glookup(char* name)
 
 void Ginstall(char* name, int type, int size)
 {
-    struct Gsymbol* temp = st.head;
+    struct Gsymbol* temp = st.tail;
     if(temp == NULL)
     {
         struct Gsymbol* symbol = (struct Gsymbol*) malloc(sizeof(struct Gsymbol));
@@ -30,10 +30,11 @@ void Ginstall(char* name, int type, int size)
         symbol->next = NULL;
 
         st.head = symbol;
+        st.tail = symbol;
     }
     else
     {
-        for(temp = st.head;temp->next!=NULL;temp = temp->next);
+        //for(temp = st.head;temp->next!=NULL;temp = temp->next);
         
         struct Gsymbol* symbol = (struct Gsymbol*) malloc(sizeof(struct Gsymbol));
         symbol->name = name;
@@ -43,7 +44,9 @@ void Ginstall(char* name, int type, int size)
             symbol->binding= (int*)malloc(sizeof(int)*size);
         symbol->next = NULL;
 
-        temp->next = symbol;
+        st.tail->next = symbol;
+        st.tail = st.tail->next;
+
     }
 }
 
