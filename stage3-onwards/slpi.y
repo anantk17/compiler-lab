@@ -7,6 +7,7 @@
 
    int yylex(void); 
    extern struct SymbolTable st;
+   int type;
 %}
 
 %union{
@@ -18,7 +19,7 @@
 %token <ival> DIGIT EQUAL BOL
 %token <name> ID
 %token <nptr> READ WRITE IF THEN ELSE ENDIF WHILE DO ENDWHILE INTEGER DECL ENDDECL BOOLEAN
-%type <nptr> slist stmt gdecl idlist E IDT DECLID decllist decl
+%type <nptr> slist stmt gdecl idlist E IDT declid decllist decl dtype 
 
 %right '='
 %left OR
@@ -35,24 +36,30 @@
 start : gdecl slist
       {evaluate($2);exit(0);}
       ;
-gdecl   :   DECL decllist ENDDECL {$$ = $2;declare($$);}
+gdecl   :   DECL decllist ENDDECL {}
         ;
 
-decllist : decl decllist {$$ = mkDeclNode(CDECLIST,$1,$2);}
-         | decl {$$=$1;}
+decllist : decl decllist {}
+         | decl {}
          ;
 
-decl :  INTEGER idlist ';'  {$$ = mkIdListNode(CDECL,INT,$2);}
-     |  BOOLEAN idlist ';'  {$$ = mkIdListNode(CDECL,BOOL,$2);}
+decl : dtype idlist ';' {}
      ;
 
-idlist : DECLID ',' idlist {$$ = mkDeclNode(CIDLIST,$1,$3);}  
-       | DECLID {$$ = $1;}
+dtype : INTEGER {type = INT;}
+      | BOOLEAN {type = BOOL;}
+      ;
+
+idlist : declid ',' idlist {}  
+       | declid {}
        ;
 
 slist : stmt slist   {$$ = mkstmtNode(CSLIST,$1,$2,NULL);}
         | stmt {$$=$1;}
       ;
+declid : ID { Ginstall($1,type,1);}
+       | ID '[' DIGIT ']' {Ginstall($1,type,$3);}
+       ;
 
 stmt : IDT '=' E ';'   {$$ = mkstmtNode(ASSG,$1,$3,NULL);}
      | READ '(' IDT ')'';'  {$$ = mkstmtNode(CREAD,$3, NULL,NULL);}
@@ -82,9 +89,7 @@ E : E '+' E   {$$ = mkOpNode('+',$1,$3);}
   | BOL     {$$ = mkBool($1);} 
   ;
 
-DECLID : ID {$$ = mkDeclID(DID,$1,1);}
-       | ID '[' DIGIT ']' {$$ = mkDeclID(DID,$1,$3);}
-       ;
+
 
 IDT : ID    {$$ = mkID($1,NULL);}
     | ID '[' E ']'  {$$ = mkID($1,$3);}
@@ -99,6 +104,7 @@ yyerror()
 
 int main(int argc, char *argv[])
 {
+    int curr_line = 0;
     yyin = fopen(argv[1],"r");
     st.head = NULL;
     yyparse();

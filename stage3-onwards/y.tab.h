@@ -102,7 +102,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 12 "slpi.y" /* yacc.c:1909  */
+#line 13 "slpi.y" /* yacc.c:1909  */
 
     int ival;
     char* name;

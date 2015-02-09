@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 extern struct SymbolTable st;
+extern yylineno;
 
 //Create operator nodes
 struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr2)
@@ -22,7 +23,7 @@ struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr
     {
         if((node->ptr1->data_type != BOOL) || (node->ptr2->data_type != node->ptr1->data_type))
         {
-            printf("Incorrect data type for %d operator",op);
+            printf("ERROR: Line Number %d Incorrect data type for %d operator",yylineno,op);
             exit(8);
         }
         node->data_type = BOOL;
@@ -31,7 +32,7 @@ struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr
     {
         if((node->ptr1->data_type != BOOL))
         {
-            printf("Incorrect data type for %d operator",op);
+            printf("ERROR: Line Number %d Incorrect data type for %d operator",yylineno,op);
             exit(8);
         }
         node->data_type = BOOL;
@@ -40,7 +41,7 @@ struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr
     {
         if((node->ptr1->data_type != INT) || (node->ptr1->data_type != node->ptr2->data_type))
         {
-            printf("Incorrect data type for %d operator",op);
+            printf("ERROR: Line Number %d Incorrect data type for %d operator",yylineno,op);
             exit(8);
         }
 
@@ -78,7 +79,7 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
 
         if(node->ptr1->data_type != node->ptr2->data_type)
         {
-            printf("ERROR!!!: type mismatch\n");
+            printf("ERROR: Line Number %d type mismatch\n",yylineno);
             exit(5);
         }
     }
@@ -90,7 +91,7 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
         
         if(node->ptr1->data_type != BOOL)
         {
-            printf("Error!!!: type mismatch\n");
+            printf("ERROR: Line Number %d type mismatch\n",yylineno);
             exit(6);
         }
 
@@ -115,13 +116,13 @@ struct tree_node* mkID(char* name,struct tree_node* offset_expr)
 
         if(offset_expr!= NULL && offset_expr->data_type == BOOL)
         {
-            printf("Error: Incorrect type for array index");
+            printf("Error: Line Number %d Incorrect type for array index",yylineno);
             exit(7);
         }
         struct Gsymbol* ret = Glookup(name);
         if(ret == NULL)
         {
-            printf("Error: Undeclared variable used\n");
+            printf("Error: Line Number %d Undeclared variable used\n",yylineno);
             exit(3);
         }
         
@@ -264,7 +265,7 @@ void evaluate(struct tree_node* node)
                     *(node->ptr1->symbol->binding + exp_evaluate(node->ptr1->offset)) = 0;
                 else
                 {
-                    printf("Invalid value for boolean identifier %s",node->ptr1->name);
+                    printf("Error: Line Number %d Invalid value for boolean identifier %s",yylineno,node->ptr1->name);
                     exit(5);
                 }
             }
@@ -348,7 +349,7 @@ void declare_type(struct tree_node* root, int data_type)
     {
        if(Glookup(root->name))
        {
-            printf("Error!!!. Identifier %s already declared previously.",root->name);
+            printf("Error!!!. Line Number %d Identifier %s already declared previously.",yylineno,root->name);
             exit(2);
        }
        else
