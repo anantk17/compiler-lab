@@ -31,7 +31,7 @@ integer {return INTEGER;}
 boolean {return BOOLEAN;}
 decl[\t\n]    {return DECL;}
 enddecl[\t\n] {return ENDDECL;}
-[ \t\n]     {}
+[ \t]     {}
 [A-Za-z][A-Za-z0-9]* {yylval.name = strdup(yytext);return ID;}
 .   {}
 

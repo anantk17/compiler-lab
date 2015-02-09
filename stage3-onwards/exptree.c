@@ -23,6 +23,7 @@ struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr
         if((node->ptr1->data_type != BOOL) || (node->ptr2->data_type != node->ptr1->data_type))
         {
             printf("Incorrect data type for %d operator",op);
+            exit(8);
         }
         node->data_type = BOOL;
     }
@@ -31,6 +32,7 @@ struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr
         if((node->ptr1->data_type != BOOL))
         {
             printf("Incorrect data type for %d operator",op);
+            exit(8);
         }
         node->data_type = BOOL;
     }
@@ -39,6 +41,7 @@ struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr
         if((node->ptr1->data_type != INT) || (node->ptr1->data_type != node->ptr2->data_type))
         {
             printf("Incorrect data type for %d operator",op);
+            exit(8);
         }
 
         if(op == '+' || op == '-' || op == '*' || op == '/' || op == '%')
@@ -109,13 +112,19 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
 //Create leaf nodes for IDENTIFIERS
 struct tree_node* mkID(char* name,struct tree_node* offset_expr)
 {
+
+        if(offset_expr!= NULL && offset_expr->data_type == BOOL)
+        {
+            printf("Error: Incorrect type for array index");
+            exit(7);
+        }
         struct Gsymbol* ret = Glookup(name);
         if(ret == NULL)
         {
             printf("Error: Undeclared variable used\n");
             exit(3);
         }
-
+        
         struct tree_node *node = (struct tree_node*)malloc(sizeof(struct tree_node));
         if(!node)  
             printf("malloc failed");
