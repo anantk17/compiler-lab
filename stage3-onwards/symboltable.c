@@ -28,7 +28,8 @@ void Ginstall(char* name, int type, int size)
         //if(type == 0)
             symbol->binding= (int*)malloc(sizeof(int)*size);
         symbol->next = NULL;
-
+        //if(size > 1)
+        //    symbol->array = 1;
         st.head = symbol;
         st.tail = symbol;
     }
@@ -43,7 +44,8 @@ void Ginstall(char* name, int type, int size)
         //if(type == 0)
             symbol->binding= (int*)malloc(sizeof(int)*size);
         symbol->next = NULL;
-
+        //if(size > 1)
+        //    symbol->array = 1;
         st.tail->next = symbol;
         st.tail = st.tail->next;
 

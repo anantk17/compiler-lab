@@ -8,6 +8,7 @@ struct Gsymbol
     int type;       //type can be INTEGER for now
     int size;       //size of array
     int* binding;   //pointer to the memory location allocated for symbol
+    int array;
 
     struct Gsymbol *next;  //pointer to next node in the linked list
 };

@@ -113,7 +113,6 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
 //Create leaf nodes for IDENTIFIERS
 struct tree_node* mkID(char* name,struct tree_node* offset_expr)
 {
-
         if(offset_expr!= NULL && offset_expr->data_type == BOOL)
         {
             printf("Error: Line Number %d Incorrect type for array index",yylineno);
@@ -126,6 +125,16 @@ struct tree_node* mkID(char* name,struct tree_node* offset_expr)
             exit(3);
         }
         
+        if(ret->size > 1 && offset_expr == NULL)
+        {
+            printf("Error: Line Number %d Array variable used without subscript",yylineno);
+            exit(3);
+        }
+        if(ret->size == 1 && offset_expr != NULL)
+        {
+            printf("Error: Line Number %d Integer type used with subscript",yylineno);
+            exit(3);
+        }
         struct tree_node *node = (struct tree_node*)malloc(sizeof(struct tree_node));
         if(!node)  
             printf("malloc failed");
