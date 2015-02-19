@@ -92,7 +92,7 @@ int gen_code(struct tree_node* node)
         current_reg = begin;
         return current_reg;
     }
-    else if(node->type == '+' || node->type == '-' || node->type == '*' || node->type == '/' || node->type == '%' ||node->type == '<' || node->type=='>' || node->type == ISEQUAL || node->type == ISNTEQUAL || node->type == CLTE || node->type == CGTE)
+    else if(node->type == '+' || node->type == '-' || node->type == '*' || node->type == '/' || node->type == '%' ||node->type == '<' || node->type=='>' || node->type == ISEQUAL || node->type == ISNTEQUAL || node->type == CLTE || node->type == CGTE || node->type == CAND || node->type == COR)
     {   
         int begin = current_reg;
         int result_reg1, result_reg2;
@@ -137,10 +137,27 @@ int gen_code(struct tree_node* node)
                         break;
             case CLTE : printf("LE R%d, R%d\n",result_reg1,result_reg2);
                         break;
+            case CAND : printf("MUL R%d, R%d\n",result_reg1,result_reg2);
+                        break;
+            case COR  : printf("ADD R%d, R%d\n",result_reg1,result_reg2);
+                        printf("MOV R%d, 2\n",result_reg2);
+                        printf("MOD R%d,R%d",result_reg1,result_reg2);
+                        break;
         }
         
         current_reg = begin+1;
         return result_reg1;          
+    }
+    else if(node->type == CNOT)
+    {
+        int begin = current_reg;
+        int result_reg1,result_reg2;
+        result_reg1 = gen_code(node->ptr1);
+        printf("INR R%d",result_reg1);
+        printf("MOV R%d, 2",current_reg);
+        printf("MOD R%d,R%d",result_reg1,current_reg);
+        current_reg = begin+1;
+        return result_reg1;
     }
     else if(node->type == CIF)
     {
