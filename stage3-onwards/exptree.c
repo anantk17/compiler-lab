@@ -127,12 +127,12 @@ struct tree_node* mkID(char* name,struct tree_node* offset_expr)
         
         if(ret->size > 1 && offset_expr == NULL)
         {
-            printf("Error: Line Number %d Array variable used without subscript",yylineno);
+            printf("Error: Line Number %d Array variable used without index",yylineno);
             exit(3);
         }
         if(ret->size == 1 && offset_expr != NULL)
         {
-            printf("Error: Line Number %d Integer type used with subscript",yylineno);
+            printf("Error: Line Number %d Integer type used with index",yylineno);
             exit(3);
         }
         struct tree_node *node = (struct tree_node*)malloc(sizeof(struct tree_node));
@@ -184,6 +184,7 @@ struct tree_node* mkBool(int val)
     return node;
  
 }
+/*
 //Evaluates expression nodes
 int exp_evaluate(struct tree_node* node)
 {
@@ -246,9 +247,9 @@ int exp_evaluate(struct tree_node* node)
             break;
     }
 }
-
+*/
 //Evaluates abstract syntax tree
-void evaluate(struct tree_node* node)
+/*void evaluate(struct tree_node* node)
 {
     if(node->type == CSLIST)
     {
@@ -313,7 +314,7 @@ void evaluate(struct tree_node* node)
     }
         return;
 }
-
+*/
 struct tree_node* mkDeclNode(int decl_type,struct tree_node* ptr1, struct tree_node* ptr2)
 {
     struct tree_node* Node = (struct tree_node*) malloc(sizeof(struct tree_node));

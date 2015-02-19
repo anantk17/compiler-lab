@@ -1,0 +1,6 @@
+decl
+integer a,b,c;
+enddecl
+
+a = 2 * 3 + 5 * 10;
+write(a);

@@ -19,7 +19,7 @@
 %token <ival> DIGIT EQUAL BOL
 %token <name> ID
 %token <nptr> READ WRITE IF THEN ELSE ENDIF WHILE DO ENDWHILE INTEGER DECL ENDDECL BOOLEAN
-%type <nptr> slist stmt gdecl idlist E IDT declid decllist decl dtype 
+%type <nptr> slist stmt gdecl idlist E IDT declid decllist decl dtype start 
 
 %right '='
 %left OR
@@ -34,7 +34,7 @@
 %%
 
 start : gdecl slist
-      {evaluate($2);exit(0);}
+      {$$ = mkstmtNode(CPGM,$2,NULL,NULL);gen_code($$);exit(0);}
       ;
 gdecl   :   DECL decllist ENDDECL {}
         ;
@@ -107,6 +107,8 @@ int main(int argc, char *argv[])
     int curr_line = 0;
     yyin = fopen(argv[1],"r");
     st.head = NULL;
+    st.tail = NULL;
+    st.memory = 0;
     yyparse();
     fclose(yyin);
     return 1;

@@ -22,6 +22,7 @@
 #define CAND 18     //AND
 #define COR 19      //OR
 #define CNOT 20     //NOT
+#define CPGM 21     //PROGRAM
 struct tree_node{ 
     //type takes one of the constants defined above and denotes the type of node
     int type;

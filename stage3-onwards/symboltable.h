@@ -7,7 +7,7 @@ struct Gsymbol
     char *name;     //name of symbol
     int type;       //type can be INTEGER for now
     int size;       //size of array
-    int* binding;   //pointer to the memory location allocated for symbol
+    int binding;   //pointer to the memory location allocated for symbol
     int array;
 
     struct Gsymbol *next;  //pointer to next node in the linked list
@@ -17,6 +17,7 @@ struct SymbolTable
 {
     struct Gsymbol* head;
     struct Gsymbol* tail;
+    int memory;
 };
 
 struct Gsymbol* Glookup(char* name);

@@ -1492,7 +1492,7 @@ yyreduce:
         case 2:
 /* Line 1787 of yacc.c  */
 #line 37 "slpi.y"
-    {evaluate((yyvsp[(2) - (2)].nptr));exit(0);}
+    {(yyval.nptr) = mkstmtNode(CPGM,(yyvsp[(2) - (2)].nptr),NULL,NULL);gen_code((yyval.nptr));exit(0);}
     break;
 
   case 3:
@@ -1971,6 +1971,8 @@ int main(int argc, char *argv[])
     int curr_line = 0;
     yyin = fopen(argv[1],"r");
     st.head = NULL;
+    st.tail = NULL;
+    st.memory = 0;
     yyparse();
     fclose(yyin);
     return 1;

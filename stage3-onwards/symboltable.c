@@ -26,12 +26,13 @@ void Ginstall(char* name, int type, int size)
         symbol->type = type;
         symbol->size = size;
         //if(type == 0)
-            symbol->binding= (int*)malloc(sizeof(int)*size);
+        symbol->binding= st.memory;//(int*)malloc(sizeof(int)*size);
         symbol->next = NULL;
         //if(size > 1)
         //    symbol->array = 1;
         st.head = symbol;
         st.tail = symbol;
+        st.memory = st.memory + size;
     }
     else
     {
@@ -42,12 +43,13 @@ void Ginstall(char* name, int type, int size)
         symbol->type = type;
         symbol->size = size;
         //if(type == 0)
-            symbol->binding= (int*)malloc(sizeof(int)*size);
+            symbol->binding= st.memory;//(int*)malloc(sizeof(int)*size);
         symbol->next = NULL;
         //if(size > 1)
         //    symbol->array = 1;
         st.tail->next = symbol;
         st.tail = st.tail->next;
+        st.memory = st.memory + size;
 
     }
 }
