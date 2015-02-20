@@ -36,31 +36,39 @@ int gen_code(struct tree_node* node)
     {
         int begin = current_reg;
         //int result_reg = gen_code(node->offset);
-        printf("MOV R%d, %d\n",current_reg,node->symbol->binding);
-        int addr_reg = current_reg;
-        current_reg++;
+        //printf("MOV R%d, %d\n",current_reg,node->symbol->binding);
+        //int addr_reg = current_reg;
+        //current_reg++;
         int result_reg = gen_code(node->offset);
+        printf("MOV R%d, %d\n",current_reg,node->symbol->binding);
         if(result_reg!=-1)
-            printf("ADD R%d, R%d\n",addr_reg,result_reg);
-                     
-        printf("MOV R%d, [R%d]\n",addr_reg,addr_reg);
-        result_reg = addr_reg;
-        current_reg = result_reg + 1;
+            printf("ADD R%d, R%d\n",result_reg,current_reg);
+        else
+            result_reg = current_reg;
+
+        printf("MOV R%d, [R%d]\n",result_reg,result_reg);
+
+        current_reg = begin + 1;
         return result_reg;
     }
     else if(node->type == ASSG)
     {
+
         int begin = current_reg;
+        int result_reg1 = gen_code(node->ptr2);
         int result_reg = gen_code(node->ptr1->offset);
         printf("MOV R%d, %d\n", current_reg, node->ptr1->symbol->binding);
         if(result_reg!=-1)
         {
-            printf("ADD R%d, R%d\n", current_reg, result_reg);
+            printf("ADD R%d, R%d\n", result_reg, current_reg);
         }
-        int address_reg = current_reg;
-        current_reg++;
-        result_reg = gen_code(node->ptr2);
-        printf("MOV [R%d], R%d\n",address_reg, result_reg);
+        else
+        {
+            result_reg = current_reg;
+        }
+        //int address_reg = current_reg
+        //int result_reg1 = gen_code(node->ptr2);
+        printf("MOV [R%d], R%d\n",result_reg, result_reg1);
         current_reg = begin;
         return begin;
     }
@@ -139,9 +147,16 @@ int gen_code(struct tree_node* node)
                         break;
             case CAND : printf("MUL R%d, R%d\n",result_reg1,result_reg2);
                         break;
-            case COR  : printf("ADD R%d, R%d\n",result_reg1,result_reg2);
-                        printf("MOV R%d, 2\n",result_reg2);
-                        printf("MOD R%d,R%d",result_reg1,result_reg2);
+            case COR  : printf("JNZ R%d, L%d\n",result_reg1,current_label);
+                        printf("JNZ R%d, L%d\n",result_reg2,current_label);
+                        int l1 = current_label;
+                        current_label++;
+                        printf("MOV R%d, %d\n",result_reg1,0);
+                        printf("JMP L%d\n",current_label);
+                        int l2 = current_label;
+                        current_label++;
+                        printf("L%d: MOV R%d, %d\n",l1,result_reg2,1);
+                        printf("L%d:\n",l2);
                         break;
         }
         
@@ -153,9 +168,9 @@ int gen_code(struct tree_node* node)
         int begin = current_reg;
         int result_reg1,result_reg2;
         result_reg1 = gen_code(node->ptr1);
-        printf("INR R%d",result_reg1);
-        printf("MOV R%d, 2",current_reg);
-        printf("MOD R%d,R%d",result_reg1,current_reg);
+        printf("INR R%d\n",result_reg1);
+        printf("MOV R%d, 2\n",current_reg);
+        printf("MOD R%d,R%d\n",result_reg1,current_reg);
         current_reg = begin+1;
         return result_reg1;
     }
@@ -166,6 +181,7 @@ int gen_code(struct tree_node* node)
         int result_reg1 = gen_code(node->ptr1);
         printf("JZ R%d, L%d\n",result_reg1,label);
         current_label++;
+        current_reg--;
         int result_reg2 = gen_code(node->ptr2);
         printf("L%d: ",label);
         return 0;
@@ -176,6 +192,7 @@ int gen_code(struct tree_node* node)
         int label = current_label;
         int result_reg1 = gen_code(node->ptr1);
         printf("JZ R%d, L%d\n",result_reg1,label);
+        current_reg--;
         current_label++;
         int result_reg2 = gen_code(node->ptr2);
         int label1 = current_label;
@@ -196,6 +213,7 @@ int gen_code(struct tree_node* node)
         int loop_exit_label = current_label;
         printf("JZ R%d, L%d\n",result_reg1,loop_exit_label);
         current_label++;
+        current_reg--;
         gen_code(node->ptr2);
         printf("JMP L%d\n",loop_entry_label);
         printf("L%d: ",loop_exit_label);
