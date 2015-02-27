@@ -84,8 +84,8 @@ RET		{ yylval.flag=0; return(RET); }
 IN    		{ yylval.flag=0; return(IN); }
 OUT		{ yylval.flag=0; return(OUT); }
 HALT		{ yylval.flag=0; return(HALT); }
-R[0-9]+         { yylval.flag=REG; yytext++;return(atoi(yytext)); }
-\[R[0-9]+\]     {	
+R[0-7]         { yylval.flag=REG; yytext++;return(atoi(yytext)); }
+\[R[0-7]\]     {	
 			yylval.flag=MEM_REG; 
 			yytext[yyleng-1]='\0';
 			yytext=yytext+2;	
