@@ -27,7 +27,6 @@
 %token <nptr> END MAIN
 %type <nptr> slist stmt gdecl idlist E IDT declid decllist decl dtype start mainblock 
 %type <nptr> carglist RetStmt fdef fdeflist Body
-%type <args> defarglist
 
 %right '='
 %left OR
@@ -69,10 +68,12 @@ declid : ID { Ginstall($1,type,1);}
        func_type;}
        ;
 
-decarglist : decargentry decarglist{}
-        | dtype decargidlist {} 
-        | {}
-        ;
+decarglist : decargglist {}
+           | {}
+
+decargglist :  decargentry decargglist {}
+           | dtype decargidlist {}
+          ;
 
 decargentry : dtype decargidlist ';' {} 
             ;
@@ -81,24 +82,11 @@ decargidlist: ID ',' decargidlist {addArgs($1,type);}
             |ID {addArgs($1,type);} 
             ;
 
-defarglist : defargentry defarglist{}
-            | dtype defargidlist   {}
-            | {}
-        ;
-
-defargentry : dtype defargidlist ';' {}
-
-            ;
-
-defargidlist: ID ',' defargidlist {addArgs($1,type);}
-            |ID {addArgs($1,type);} 
-            ;
-
 fdeflist : fdeflist fdef{}
           | {}
           ;
 
-fdef: dtype {func_type = type;} ID '(' defarglist ')' {installArgs($3);} '{' LDefblock Body '}'{gen_code($10);clear_args();clear_local();type = func_type;}
+fdef: dtype {func_type = type;} ID '(' decarglist ')' {installArgs($3);} '{' LDefblock Body '}'{gen_code($10);clear_args();clear_local();type = func_type;}
     ;
 
 mainblock : INTEGER {func_type = INT;}MAIN '(' ')' '{' LDefblock Body '}'{gen_code($8);clear_args();clear_local(); type = func_type;}

@@ -12,7 +12,7 @@ write(a);
 return 0;
 end
 }
-integer f1(integer c;boolean d)
+integer f2(integer c;boolean d)
 {
 decl
 enddecl
