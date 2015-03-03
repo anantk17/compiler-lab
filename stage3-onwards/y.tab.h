@@ -63,13 +63,17 @@ extern int yydebug;
      DECL = 272,
      ENDDECL = 273,
      BOOLEAN = 274,
-     OR = 275,
-     AND = 276,
-     NOTEQUAL = 277,
-     EQUALITY = 278,
-     GTE = 279,
-     LTE = 280,
-     NOT = 281
+     FBEGIN = 275,
+     RETURN = 276,
+     END = 277,
+     MAIN = 278,
+     OR = 279,
+     AND = 280,
+     NOTEQUAL = 281,
+     EQUALITY = 282,
+     GTE = 283,
+     LTE = 284,
+     NOT = 285
    };
 #endif
 /* Tokens.  */
@@ -90,13 +94,17 @@ extern int yydebug;
 #define DECL 272
 #define ENDDECL 273
 #define BOOLEAN 274
-#define OR 275
-#define AND 276
-#define NOTEQUAL 277
-#define EQUALITY 278
-#define GTE 279
-#define LTE 280
-#define NOT 281
+#define FBEGIN 275
+#define RETURN 276
+#define END 277
+#define MAIN 278
+#define OR 279
+#define AND 280
+#define NOTEQUAL 281
+#define EQUALITY 282
+#define GTE 283
+#define LTE 284
+#define NOT 285
 
 
 
@@ -104,15 +112,16 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2053 of yacc.c  */
-#line 13 "slpi.y"
+#line 16 "slpi.y"
 
     int ival;
     char* name;
     struct tree_node *nptr;
+    struct arg_node *args;
 
 
 /* Line 2053 of yacc.c  */
-#line 116 "y.tab.h"
+#line 125 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

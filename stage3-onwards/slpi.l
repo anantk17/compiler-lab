@@ -9,7 +9,7 @@
 %%
 
 [0-9]+  {yylval.ival = atoi(yytext);return DIGIT;}
-[%\[\],-<>()*+;=/]    {return *yytext;}
+[%\[\],-<>()*+;=/\{\}]    {return *yytext;}
 "AND"   {return AND;}
 "OR"    {return OR;}
 "NOT"   {return NOT;}
@@ -30,6 +30,10 @@ do      {return DO;}
 endwhile {return ENDWHILE;}
 integer {return INTEGER;}
 boolean {return BOOLEAN;}
+main    {return MAIN;}
+begin   {return FBEGIN;}
+end     {return END;}
+return  {return RETURN;}
 decl[\t\n]    {return DECL;}
 enddecl[\t\n] {return ENDDECL;}
 [ \t\n]     {}

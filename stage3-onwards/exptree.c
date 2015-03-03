@@ -5,6 +5,7 @@
 
 extern struct SymbolTable st;
 extern yylineno;
+extern func_type;
 
 //Create operator nodes
 struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr2)
@@ -100,6 +101,17 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
             node->ptr3 = ptr3;
         }
     }
+    else if(stmt == CRET)
+    {
+        node->arglist = NULL;
+        node->ptr1 = ptr1;
+        printf("%d %d\n",func_type,node->ptr1->data_type);
+        if(func_type != node->ptr1->data_type)
+        {
+            printf("Return type does not match function definition\n");
+            exit(1);
+        }
+    }
     else
     {
         node->arglist = NULL;
@@ -118,19 +130,26 @@ struct tree_node* mkID(char* name,struct tree_node* offset_expr)
             printf("Error: Line Number %d Incorrect type for array index",yylineno);
             exit(7);
         }
-        struct Gsymbol* ret = Glookup(name);
+        struct Gsymbol* gret = NULL;
+        struct Lsymbol* ret = Llookup(name);
         if(ret == NULL)
         {
-            printf("Error: Line Number %d Undeclared variable used\n",yylineno);
-            exit(3);
+
+          //  printf("Global table\n");
+            gret = Glookup(name);
+            if(gret == NULL)
+            {
+                printf("Error: Line Number %d Undeclared variable used\n",yylineno);
+                exit(3);
+            }
         }
-        
-        if(ret->size > 1 && offset_expr == NULL)
+        //printf("Local Table\n");
+        if(ret == NULL && gret->size > 1 && offset_expr == NULL )
         {
             printf("Error: Line Number %d Array variable used without index",yylineno);
             exit(3);
         }
-        if(ret->size == 1 && offset_expr != NULL)
+        if(ret == NULL  && gret->size == 1 && offset_expr != NULL)
         {
             printf("Error: Line Number %d Integer type used with index",yylineno);
             exit(3);
@@ -143,8 +162,16 @@ struct tree_node* mkID(char* name,struct tree_node* offset_expr)
         node->arglist = NULL;
         node->offset = offset_expr;
         node->name = name;
-        node->data_type = ret->type;
-        node->symbol = ret;
+        if(ret != NULL)
+        {   
+            node->data_type = ret->type;
+            node->lsymbol = ret;
+        }
+        else
+        {
+            node->data_type = gret->type;
+            node->symbol = gret;
+        }
         node->ptr1 = NULL;
         node->ptr2 = NULL;
     
@@ -379,5 +406,78 @@ void declare(struct tree_node* root)
     else if(root->type == CDECL)
     {
         declare_type(root->ptr1,root->data_type);    
+    }
+}
+
+struct tree_node* mkFunc(char* name, struct tree_node* arglist)
+{
+    struct tree_node* node = (struct tree_node*)malloc(sizeof(struct tree_node));
+    node->type = CFUNCCALL;
+    node->name = name;
+    node->arglist = arglist;
+    struct Gsymbol* ret = Glookup(name);
+    if(ret == NULL)
+    {
+        printf("Function not declared before use\n");
+        exit(1);
+    }
+    struct tree_node* temp1 = arglist;
+    struct arg_node* temp = ret->args;
+    while(temp!=NULL && temp1!=NULL)
+    {
+        if(temp1->type == CARG)
+        {
+            if(temp1->ptr2->data_type != temp->type)
+            {
+                printf("Error: Argument types do not match \n");
+                exit(1);
+            }
+        }
+        /*else
+        {
+            if(temp1->data_type != temp->type)
+            {
+                printf("Error: Argument types do not match \n");
+                exit(1);
+            }
+        }*/
+        temp1 = temp1->ptr1;
+        temp = temp->next;
+    }
+    if(temp!=NULL || temp1!=NULL)
+    {
+
+        printf("Error: Mismatched number of arguments \n");
+        exit(1);
+    }
+    node->data_type = ret->type;
+    node->symbol = ret;
+
+    return node;
+}
+
+struct tree_node* mkArgNode(int type, struct tree_node* ptr1, struct tree_node* ptr2)
+{
+    struct tree_node* node = (struct tree_node*) malloc(sizeof(struct tree_node));
+    node->type = type;
+    node->ptr1 = ptr1;
+    node->ptr2 = ptr2;
+
+    return node;
+}
+
+void printArgNode(struct tree_node* root)
+{
+    while(root!= NULL)
+    {
+        if(root->type == CARG)
+        {
+            printf("%d\n",root->ptr2->data_type);
+        }
+        else
+        {
+            printf("%d\n",root->data_type);
+        }
+        root = root->ptr1;
     }
 }

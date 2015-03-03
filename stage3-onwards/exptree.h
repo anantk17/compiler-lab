@@ -23,6 +23,11 @@
 #define COR 19      //OR
 #define CNOT 20     //NOT
 #define CPGM 21     //PROGRAM
+#define CFUNC 22
+#define CRET 23
+#define CARG 24
+#define CFUNCCALL 25
+
 struct tree_node{ 
     //type takes one of the constants defined above and denotes the type of node
     int type;
@@ -41,6 +46,7 @@ struct tree_node{
     struct tree_node *ptr1, *ptr2, *ptr3;
     //Pointer to entry in symbol table
     struct Gsymbol* symbol;
+    struct Lsymbol* lsymbol;
     };
 
 struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr2);
@@ -67,6 +73,9 @@ void declare(struct tree_node* root);
 
 void declare_type(struct tree_node* root,int data_type);
 
+struct tree_node* mkFunc(char* name , struct  tree_node* arglist);
+
+struct tree_node* mkArgNode(int node_type, struct tree_node* ptr1, struct tree_node* ptr2);
 //table for storing the current value for the variables a-z
 int variables[26];
 
