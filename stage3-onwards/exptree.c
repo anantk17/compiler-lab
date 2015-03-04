@@ -105,7 +105,6 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
     {
         node->arglist = NULL;
         node->ptr1 = ptr1;
-        printf("%d %d\n",func_type,node->ptr1->data_type);
         if(func_type != node->ptr1->data_type)
         {
             printf("Return type does not match function definition\n");
@@ -480,4 +479,27 @@ void printArgNode(struct tree_node* root)
         }
         root = root->ptr1;
     }
+}
+
+struct tree_node* mkFuncDefNode(char* name, struct tree_node* body,int data_type)
+{
+    struct tree_node* node = (struct tree_node*)malloc(sizeof(struct tree_node));
+    node->type = CFUNCDEF;
+    node->data_type = data_type;
+    node->ptr1 = body;
+    node->symbol = Glookup(name);
+    node->name = name;
+
+    return node;
+}
+
+struct tree_node* mkMainDefNode(struct tree_node* body)
+{
+    struct tree_node* node = (struct tree_node*)malloc(sizeof(struct tree_node));
+    node->type = CMAIN;
+    node->data_type = INT;
+    node->ptr1 = body;
+    node->symbol = NULL;
+
+    return node;
 }

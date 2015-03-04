@@ -27,6 +27,8 @@
 #define CRET 23
 #define CARG 24
 #define CFUNCCALL 25
+#define CMAIN 26
+#define CFUNCDEF 27
 
 struct tree_node{ 
     //type takes one of the constants defined above and denotes the type of node
@@ -77,6 +79,11 @@ struct tree_node* mkFunc(char* name , struct  tree_node* arglist);
 
 struct tree_node* mkArgNode(int node_type, struct tree_node* ptr1, struct tree_node* ptr2);
 //table for storing the current value for the variables a-z
+//
+struct tree_node* mkFuncDefNode(char* name, struct tree_node* body, int data_type);
+
+struct tree_node* mkMainDefNode(struct tree_node* body);
+
 int variables[26];
 
 //table for checking whether variables are initialized

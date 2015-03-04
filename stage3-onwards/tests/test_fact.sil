@@ -21,9 +21,7 @@ rvalue = 1;
 else
 
 rvalue = n * factorial (n-1);
-
 endif;
-
 return rvalue;  
 end
 

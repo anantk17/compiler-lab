@@ -11,6 +11,7 @@
    extern struct arg_list alist;
    int type;
    int func_type;
+   int sp=0,bp=0;
 %}
 
 %union{
@@ -40,11 +41,11 @@
 
 %%
 
-start : gdecl fdeflist mainblock
-      {/*$$ = mkstmtNode(CPGM,$2,NULL,NULL);gen_code($$);exit(0);*/}
+start : {printf("START\nMOV BP, 0\n");}gdecl fdeflist mainblock   {printf("end: HALT\n");}
+      
       ;
 
-gdecl   :   DECL decllist ENDDECL {clear_args();}
+gdecl   :   DECL decllist ENDDECL {clear_args();sp = st.memory;printf("MOV SP,%d\n",sp);printf("CALL main\n");printf("JMP end\n");}
         ;
 
 decllist : decl decllist {}
@@ -86,10 +87,10 @@ fdeflist : fdeflist fdef{}
           | {}
           ;
 
-fdef: dtype {func_type = type;} ID '(' decarglist ')' {installArgs($3);} '{' LDefblock Body '}'{gen_code($10);clear_args();clear_local();type = func_type;}
+fdef: dtype {func_type = type;} ID '(' decarglist ')' {installArgs($3);} '{' LDefblock Body'}'{$$=mkFuncDefNode($3,$10,func_type);gen_code($$);clear_args();clear_local();type = func_type;}
     ;
 
-mainblock : INTEGER {func_type = INT;}MAIN '(' ')' '{' LDefblock Body '}'{gen_code($8);clear_args();clear_local(); type = func_type;}
+mainblock : INTEGER {func_type = INT;}MAIN '(' ')' '{' LDefblock Body'}'{$$=mkMainDefNode($8);gen_code($$);clear_args();clear_local(); type = func_type;}
           ;
 
 LDefblock : DECL ldecllist ENDDECL { }
@@ -110,7 +111,7 @@ Body : FBEGIN slist RetStmt END {$$ = mkstmtNode(CFUNC,$2,$3,NULL);}
      ;
 
 slist : stmt slist   {$$ = mkstmtNode(CSLIST,$1,$2,NULL);}
-        | {}
+        | stmt      {$$ = $1;}
     ;
 
 stmt : IDT '=' E ';'   {$$ = mkstmtNode(ASSG,$1,$3,NULL);}
