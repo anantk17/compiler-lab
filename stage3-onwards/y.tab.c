@@ -78,9 +78,11 @@
    int type;
    int func_type;
    int sp=0,bp=0;
+   FILE* outFile;
+   char filename[50];
 
 /* Line 371 of yacc.c  */
-#line 84 "y.tab.c"
+#line 86 "y.tab.c"
 
 # ifndef YY_NULL
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -182,7 +184,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 387 of yacc.c  */
-#line 17 "slpi.y"
+#line 19 "slpi.y"
 
     int ival;
     char* name;
@@ -191,7 +193,7 @@ typedef union YYSTYPE
 
 
 /* Line 387 of yacc.c  */
-#line 195 "y.tab.c"
+#line 197 "y.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -219,7 +221,7 @@ int yyparse ();
 /* Copy the second part of user declarations.  */
 
 /* Line 390 of yacc.c  */
-#line 223 "y.tab.c"
+#line 225 "y.tab.c"
 
 #ifdef short
 # undef short
@@ -551,14 +553,14 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    44,    44,    44,    48,    51,    52,    55,    58,    59,
-      62,    63,    66,    67,    68,    68,    72,    73,    75,    76,
-      79,    82,    83,    86,    87,    89,    90,    93,    93,    93,
-      96,    96,    99,   102,   103,   106,   109,   110,   113,   116,
-     117,   120,   121,   122,   123,   124,   125,   126,   127,   130,
-     131,   132,   133,   134,   135,   136,   137,   138,   139,   140,
-     141,   142,   143,   144,   145,   146,   147,   148,   149,   152,
-     153,   154,   157,   160
+       0,    46,    46,    46,    50,    53,    54,    57,    60,    61,
+      64,    65,    68,    69,    70,    70,    74,    75,    77,    78,
+      81,    84,    85,    88,    89,    91,    92,    95,    95,    95,
+      98,    98,   101,   104,   105,   108,   111,   112,   115,   118,
+     119,   122,   123,   124,   125,   126,   127,   128,   129,   132,
+     133,   134,   135,   136,   137,   138,   139,   140,   141,   142,
+     143,   144,   145,   146,   147,   148,   149,   150,   151,   154,
+     155,   156,   159,   162
 };
 #endif
 
@@ -1575,440 +1577,440 @@ yyreduce:
     {
         case 2:
 /* Line 1787 of yacc.c  */
-#line 44 "slpi.y"
-    {printf("START\nMOV BP, 0\n");}
+#line 46 "slpi.y"
+    {fprintf(outFile,"START\nMOV BP, 0\n");}
     break;
 
   case 3:
 /* Line 1787 of yacc.c  */
-#line 44 "slpi.y"
-    {printf("end: HALT\n");}
+#line 46 "slpi.y"
+    {fprintf(outFile,"end: HALT\n");}
     break;
 
   case 4:
 /* Line 1787 of yacc.c  */
-#line 48 "slpi.y"
-    {clear_args();sp = st.memory;printf("MOV SP,%d\n",sp);printf("CALL main\n");printf("JMP end\n");}
+#line 50 "slpi.y"
+    {clear_args();sp = st.memory;fprintf(outFile,"MOV SP,%d\n",sp);fprintf(outFile,"CALL main\n");fprintf(outFile,"JMP end\n");}
     break;
 
   case 5:
 /* Line 1787 of yacc.c  */
-#line 51 "slpi.y"
+#line 53 "slpi.y"
     {}
     break;
 
   case 6:
 /* Line 1787 of yacc.c  */
-#line 52 "slpi.y"
+#line 54 "slpi.y"
     {}
     break;
 
   case 7:
 /* Line 1787 of yacc.c  */
-#line 55 "slpi.y"
+#line 57 "slpi.y"
     {}
     break;
 
   case 8:
 /* Line 1787 of yacc.c  */
-#line 58 "slpi.y"
+#line 60 "slpi.y"
     {type = INT;}
     break;
 
   case 9:
 /* Line 1787 of yacc.c  */
-#line 59 "slpi.y"
+#line 61 "slpi.y"
     {type = BOOL;}
     break;
 
   case 10:
 /* Line 1787 of yacc.c  */
-#line 62 "slpi.y"
+#line 64 "slpi.y"
     {}
     break;
 
   case 11:
 /* Line 1787 of yacc.c  */
-#line 63 "slpi.y"
+#line 65 "slpi.y"
     {}
     break;
 
   case 12:
 /* Line 1787 of yacc.c  */
-#line 66 "slpi.y"
+#line 68 "slpi.y"
     { Ginstall((yyvsp[(1) - (1)].name),type,1);}
     break;
 
   case 13:
 /* Line 1787 of yacc.c  */
-#line 67 "slpi.y"
+#line 69 "slpi.y"
     {Ginstall((yyvsp[(1) - (4)].name),type,(yyvsp[(3) - (4)].ival));}
     break;
 
   case 14:
 /* Line 1787 of yacc.c  */
-#line 68 "slpi.y"
+#line 70 "slpi.y"
     {func_type = type;}
     break;
 
   case 15:
 /* Line 1787 of yacc.c  */
-#line 68 "slpi.y"
+#line 70 "slpi.y"
     {Ginstall((yyvsp[(1) - (5)].name),func_type,0);clear_args();type =
        func_type;}
     break;
 
   case 16:
 /* Line 1787 of yacc.c  */
-#line 72 "slpi.y"
+#line 74 "slpi.y"
     {}
     break;
 
   case 17:
 /* Line 1787 of yacc.c  */
-#line 73 "slpi.y"
+#line 75 "slpi.y"
     {}
     break;
 
   case 18:
 /* Line 1787 of yacc.c  */
-#line 75 "slpi.y"
+#line 77 "slpi.y"
     {}
     break;
 
   case 19:
 /* Line 1787 of yacc.c  */
-#line 76 "slpi.y"
+#line 78 "slpi.y"
     {}
     break;
 
   case 20:
 /* Line 1787 of yacc.c  */
-#line 79 "slpi.y"
+#line 81 "slpi.y"
     {}
     break;
 
   case 21:
 /* Line 1787 of yacc.c  */
-#line 82 "slpi.y"
+#line 84 "slpi.y"
     {}
     break;
 
   case 22:
 /* Line 1787 of yacc.c  */
-#line 83 "slpi.y"
+#line 85 "slpi.y"
     {}
     break;
 
   case 23:
 /* Line 1787 of yacc.c  */
-#line 86 "slpi.y"
+#line 88 "slpi.y"
     {addArgs((yyvsp[(2) - (2)].name),type,1);}
     break;
 
   case 24:
 /* Line 1787 of yacc.c  */
-#line 87 "slpi.y"
+#line 89 "slpi.y"
     {addArgs((yyvsp[(1) - (1)].name),type,0);}
     break;
 
   case 25:
 /* Line 1787 of yacc.c  */
-#line 89 "slpi.y"
+#line 91 "slpi.y"
     {}
     break;
 
   case 26:
 /* Line 1787 of yacc.c  */
-#line 90 "slpi.y"
+#line 92 "slpi.y"
     {}
     break;
 
   case 27:
 /* Line 1787 of yacc.c  */
-#line 93 "slpi.y"
+#line 95 "slpi.y"
     {func_type = type;}
     break;
 
   case 28:
 /* Line 1787 of yacc.c  */
-#line 93 "slpi.y"
+#line 95 "slpi.y"
     {installArgs((yyvsp[(3) - (6)].name));}
     break;
 
   case 29:
 /* Line 1787 of yacc.c  */
-#line 93 "slpi.y"
+#line 95 "slpi.y"
     {(yyval.nptr)=mkFuncDefNode((yyvsp[(3) - (11)].name),(yyvsp[(10) - (11)].nptr),func_type);gen_code((yyval.nptr));clear_args();clear_local();type = func_type;}
     break;
 
   case 30:
 /* Line 1787 of yacc.c  */
-#line 96 "slpi.y"
+#line 98 "slpi.y"
     {func_type = INT;}
     break;
 
   case 31:
 /* Line 1787 of yacc.c  */
-#line 96 "slpi.y"
+#line 98 "slpi.y"
     {(yyval.nptr)=mkMainDefNode((yyvsp[(8) - (9)].nptr));gen_code((yyval.nptr));clear_args();clear_local(); type = func_type;}
     break;
 
   case 32:
 /* Line 1787 of yacc.c  */
-#line 99 "slpi.y"
+#line 101 "slpi.y"
     { }
     break;
 
   case 33:
 /* Line 1787 of yacc.c  */
-#line 102 "slpi.y"
+#line 104 "slpi.y"
     {}
     break;
 
   case 34:
 /* Line 1787 of yacc.c  */
-#line 103 "slpi.y"
+#line 105 "slpi.y"
     {}
     break;
 
   case 35:
 /* Line 1787 of yacc.c  */
-#line 106 "slpi.y"
+#line 108 "slpi.y"
     {}
     break;
 
   case 36:
 /* Line 1787 of yacc.c  */
-#line 109 "slpi.y"
+#line 111 "slpi.y"
     {Linstall((yyvsp[(1) - (3)].name),type);}
     break;
 
   case 37:
 /* Line 1787 of yacc.c  */
-#line 110 "slpi.y"
+#line 112 "slpi.y"
     {Linstall((yyvsp[(1) - (1)].name),type);}
     break;
 
   case 38:
 /* Line 1787 of yacc.c  */
-#line 113 "slpi.y"
+#line 115 "slpi.y"
     {(yyval.nptr) = mkstmtNode(CFUNC,(yyvsp[(2) - (4)].nptr),(yyvsp[(3) - (4)].nptr),NULL);}
     break;
 
   case 39:
 /* Line 1787 of yacc.c  */
-#line 116 "slpi.y"
+#line 118 "slpi.y"
     {(yyval.nptr) = mkstmtNode(CSLIST,(yyvsp[(1) - (2)].nptr),(yyvsp[(2) - (2)].nptr),NULL);}
     break;
 
   case 40:
 /* Line 1787 of yacc.c  */
-#line 117 "slpi.y"
+#line 119 "slpi.y"
     {(yyval.nptr) = (yyvsp[(1) - (1)].nptr);}
     break;
 
   case 41:
 /* Line 1787 of yacc.c  */
-#line 120 "slpi.y"
+#line 122 "slpi.y"
     {(yyval.nptr) = mkstmtNode(ASSG,(yyvsp[(1) - (4)].nptr),(yyvsp[(3) - (4)].nptr),NULL);}
     break;
 
   case 42:
 /* Line 1787 of yacc.c  */
-#line 121 "slpi.y"
+#line 123 "slpi.y"
     {(yyval.nptr) = mkstmtNode(ASSG,mkID((yyvsp[(1) - (4)].name),NULL),(yyvsp[(3) - (4)].nptr),NULL);}
     break;
 
   case 43:
 /* Line 1787 of yacc.c  */
-#line 122 "slpi.y"
+#line 124 "slpi.y"
     {(yyval.nptr) = mkstmtNode(CREAD,(yyvsp[(3) - (5)].nptr), NULL,NULL);}
     break;
 
   case 44:
 /* Line 1787 of yacc.c  */
-#line 123 "slpi.y"
+#line 125 "slpi.y"
     {(yyval.nptr) = mkstmtNode(CREAD,mkID((yyvsp[(3) - (5)].name),NULL),NULL,NULL);}
     break;
 
   case 45:
 /* Line 1787 of yacc.c  */
-#line 124 "slpi.y"
+#line 126 "slpi.y"
     {(yyval.nptr) = mkstmtNode(CWRITE,(yyvsp[(3) - (5)].nptr), NULL,NULL);}
     break;
 
   case 46:
 /* Line 1787 of yacc.c  */
-#line 125 "slpi.y"
+#line 127 "slpi.y"
     {(yyval.nptr) = mkstmtNode(CIF,(yyvsp[(3) - (8)].nptr),(yyvsp[(6) - (8)].nptr),NULL);}
     break;
 
   case 47:
 /* Line 1787 of yacc.c  */
-#line 126 "slpi.y"
+#line 128 "slpi.y"
     {(yyval.nptr) = mkstmtNode(CIFELSE,(yyvsp[(3) - (10)].nptr),(yyvsp[(6) - (10)].nptr),(yyvsp[(8) - (10)].nptr));}
     break;
 
   case 48:
 /* Line 1787 of yacc.c  */
-#line 127 "slpi.y"
+#line 129 "slpi.y"
     {(yyval.nptr) = mkstmtNode(CWHILE,(yyvsp[(3) - (8)].nptr),(yyvsp[(6) - (8)].nptr),NULL);}
     break;
 
   case 49:
 /* Line 1787 of yacc.c  */
-#line 130 "slpi.y"
+#line 132 "slpi.y"
     {(yyval.nptr) = mkOpNode('+',(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 50:
 /* Line 1787 of yacc.c  */
-#line 131 "slpi.y"
+#line 133 "slpi.y"
     {(yyval.nptr) = mkOpNode('-',(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 51:
 /* Line 1787 of yacc.c  */
-#line 132 "slpi.y"
+#line 134 "slpi.y"
     {(yyval.nptr) = mkOpNode('*',(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 52:
 /* Line 1787 of yacc.c  */
-#line 133 "slpi.y"
+#line 135 "slpi.y"
     {(yyval.nptr) = mkOpNode('/',(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 53:
 /* Line 1787 of yacc.c  */
-#line 134 "slpi.y"
+#line 136 "slpi.y"
     {(yyval.nptr) = mkOpNode('%',(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 54:
 /* Line 1787 of yacc.c  */
-#line 135 "slpi.y"
+#line 137 "slpi.y"
     {(yyval.nptr) = mkOpNode('>',(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 55:
 /* Line 1787 of yacc.c  */
-#line 136 "slpi.y"
+#line 138 "slpi.y"
     {(yyval.nptr) = mkOpNode('<',(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 56:
 /* Line 1787 of yacc.c  */
-#line 137 "slpi.y"
+#line 139 "slpi.y"
     {(yyval.nptr) = mkOpNode(CLTE,(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 57:
 /* Line 1787 of yacc.c  */
-#line 138 "slpi.y"
+#line 140 "slpi.y"
     {(yyval.nptr) = mkOpNode(CGTE,(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 58:
 /* Line 1787 of yacc.c  */
-#line 139 "slpi.y"
+#line 141 "slpi.y"
     {(yyval.nptr) = mkOpNode(ISEQUAL,(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 59:
 /* Line 1787 of yacc.c  */
-#line 140 "slpi.y"
+#line 142 "slpi.y"
     {(yyval.nptr) = mkOpNode(ISNTEQUAL,(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 60:
 /* Line 1787 of yacc.c  */
-#line 141 "slpi.y"
+#line 143 "slpi.y"
     {(yyval.nptr) = mkOpNode(CAND,(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 61:
 /* Line 1787 of yacc.c  */
-#line 142 "slpi.y"
+#line 144 "slpi.y"
     {(yyval.nptr) = mkOpNode(COR,(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 62:
 /* Line 1787 of yacc.c  */
-#line 143 "slpi.y"
+#line 145 "slpi.y"
     {(yyval.nptr) = mkOpNode(CNOT,(yyvsp[(2) - (2)].nptr),NULL);}
     break;
 
   case 63:
 /* Line 1787 of yacc.c  */
-#line 144 "slpi.y"
+#line 146 "slpi.y"
     {(yyval.nptr) = (yyvsp[(2) - (3)].nptr);}
     break;
 
   case 64:
 /* Line 1787 of yacc.c  */
-#line 145 "slpi.y"
+#line 147 "slpi.y"
     {(yyval.nptr) = mkNUM((yyvsp[(1) - (1)].ival));}
     break;
 
   case 65:
 /* Line 1787 of yacc.c  */
-#line 146 "slpi.y"
+#line 148 "slpi.y"
     {(yyval.nptr) = mkID((yyvsp[(1) - (1)].name),NULL);}
     break;
 
   case 66:
 /* Line 1787 of yacc.c  */
-#line 147 "slpi.y"
+#line 149 "slpi.y"
     {(yyval.nptr) = (yyvsp[(1) - (1)].nptr);}
     break;
 
   case 67:
 /* Line 1787 of yacc.c  */
-#line 148 "slpi.y"
+#line 150 "slpi.y"
     {(yyval.nptr) = mkFunc((yyvsp[(1) - (4)].name),(yyvsp[(3) - (4)].nptr));}
     break;
 
   case 68:
 /* Line 1787 of yacc.c  */
-#line 149 "slpi.y"
+#line 151 "slpi.y"
     {(yyval.nptr) = mkBool((yyvsp[(1) - (1)].ival));}
     break;
 
   case 69:
 /* Line 1787 of yacc.c  */
-#line 152 "slpi.y"
+#line 154 "slpi.y"
     {(yyval.nptr) = mkArgNode(CARG,(yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr));}
     break;
 
   case 70:
 /* Line 1787 of yacc.c  */
-#line 153 "slpi.y"
+#line 155 "slpi.y"
     {(yyval.nptr) = mkArgNode(CARG,NULL,(yyvsp[(1) - (1)].nptr));}
     break;
 
   case 71:
 /* Line 1787 of yacc.c  */
-#line 154 "slpi.y"
+#line 156 "slpi.y"
     {(yyval.nptr) = NULL;}
     break;
 
   case 72:
 /* Line 1787 of yacc.c  */
-#line 157 "slpi.y"
+#line 159 "slpi.y"
     {(yyval.nptr) = mkID((yyvsp[(1) - (4)].name),(yyvsp[(3) - (4)].nptr));}
     break;
 
   case 73:
 /* Line 1787 of yacc.c  */
-#line 160 "slpi.y"
+#line 162 "slpi.y"
     {(yyval.nptr) = mkstmtNode(CRET,(yyvsp[(2) - (3)].nptr),NULL,NULL);}
     break;
 
 
 /* Line 1787 of yacc.c  */
-#line 2012 "y.tab.c"
+#line 2014 "y.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2240,12 +2242,13 @@ yyreturn:
 
 
 /* Line 2050 of yacc.c  */
-#line 162 "slpi.y"
+#line 164 "slpi.y"
 
 
 yyerror()
 {
     printf("error");
+    remove(filename);
     return ;
 }
 
@@ -2253,6 +2256,8 @@ int main(int argc, char *argv[])
 {
     int curr_line = 0;
     yyin = fopen(argv[1],"r");
+    outFile = fopen(argv[2],"w");
+    strcpy(filename,argv[2]);
     st.head = NULL;
     st.tail = NULL;
     st.memory = 0;

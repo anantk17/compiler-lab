@@ -112,7 +112,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2053 of yacc.c  */
-#line 17 "slpi.y"
+#line 19 "slpi.y"
 
     int ival;
     char* name;

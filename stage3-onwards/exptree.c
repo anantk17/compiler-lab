@@ -25,6 +25,7 @@ struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr
         if((node->ptr1->data_type != BOOL) || (node->ptr2->data_type != node->ptr1->data_type))
         {
             printf("ERROR: Line Number %d Incorrect data type for %d operator",yylineno,op);
+            yyerror();
             exit(8);
         }
         node->data_type = BOOL;
@@ -34,6 +35,7 @@ struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr
         if((node->ptr1->data_type != BOOL))
         {
             printf("ERROR: Line Number %d Incorrect data type for %d operator",yylineno,op);
+            yyerror();
             exit(8);
         }
         node->data_type = BOOL;
@@ -43,6 +45,7 @@ struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr
         if((node->ptr1->data_type != INT) || (node->ptr1->data_type != node->ptr2->data_type))
         {
             printf("ERROR: Line Number %d Incorrect data type for %d operator",yylineno,op);
+            yyerror();
             exit(8);
         }
 
@@ -81,6 +84,7 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
         if(node->ptr1->data_type != node->ptr2->data_type)
         {
             printf("ERROR: Line Number %d type mismatch\n",yylineno);
+            yyerror();
             exit(5);
         }
     }
@@ -93,6 +97,7 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
         if(node->ptr1->data_type != BOOL)
         {
             printf("ERROR: Line Number %d type mismatch\n",yylineno);
+            yyerror();
             exit(6);
         }
 
@@ -108,6 +113,7 @@ struct tree_node* mkstmtNode(int stmt, struct tree_node* ptr1, struct tree_node*
         if(func_type != node->ptr1->data_type)
         {
             printf("Return type does not match function definition\n");
+            yyerror();
             exit(1);
         }
     }
@@ -127,6 +133,7 @@ struct tree_node* mkID(char* name,struct tree_node* offset_expr)
         if(offset_expr!= NULL && offset_expr->data_type == BOOL)
         {
             printf("Error: Line Number %d Incorrect type for array index",yylineno);
+            yyerror();
             exit(7);
         }
         struct Gsymbol* gret = NULL;
@@ -139,6 +146,7 @@ struct tree_node* mkID(char* name,struct tree_node* offset_expr)
             if(gret == NULL)
             {
                 printf("Error: Line Number %d Undeclared variable used\n",yylineno);
+                yyerror();
                 exit(3);
             }
         }
@@ -146,11 +154,13 @@ struct tree_node* mkID(char* name,struct tree_node* offset_expr)
         if(ret == NULL && gret->size > 1 && offset_expr == NULL )
         {
             printf("Error: Line Number %d Array variable used without index",yylineno);
+            yyerror();
             exit(3);
         }
         if(ret == NULL  && gret->size == 1 && offset_expr != NULL)
         {
             printf("Error: Line Number %d Integer type used with index",yylineno);
+            yyerror();
             exit(3);
         }
         struct tree_node *node = (struct tree_node*)malloc(sizeof(struct tree_node));
@@ -386,6 +396,7 @@ void declare_type(struct tree_node* root, int data_type)
        if(Glookup(root->name))
        {
             printf("Error!!!. Line Number %d Identifier %s already declared previously.",yylineno,root->name);
+            yyerror();
             exit(2);
        }
        else
@@ -418,6 +429,7 @@ struct tree_node* mkFunc(char* name, struct tree_node* arglist)
     if(ret == NULL)
     {
         printf("Function not declared before use\n");
+        yyerror();
         exit(1);
     }
     struct tree_node* temp1 = arglist;
@@ -429,6 +441,7 @@ struct tree_node* mkFunc(char* name, struct tree_node* arglist)
             if(temp1->ptr2->data_type != temp->type)
             {
                 printf("Error: Argument types do not match \n");
+                yyerror();
                 exit(1);
             }
             else
@@ -451,6 +464,7 @@ struct tree_node* mkFunc(char* name, struct tree_node* arglist)
     {
 
         printf("Error: Mismatched number of arguments \n");
+        yyerror();
         exit(1);
     }
     node->data_type = ret->type;

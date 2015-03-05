@@ -12,6 +12,8 @@
    int type;
    int func_type;
    int sp=0,bp=0;
+   FILE* outFile;
+   char filename[50];
 %}
 
 %union{
@@ -41,11 +43,11 @@
 
 %%
 
-start : {printf("START\nMOV BP, 0\n");}gdecl fdeflist mainblock   {printf("end: HALT\n");}
+start : {fprintf(outFile,"START\nMOV BP, 0\n");}gdecl fdeflist mainblock   {fprintf(outFile,"end: HALT\n");}
       
       ;
 
-gdecl   :   DECL decllist ENDDECL {clear_args();sp = st.memory;printf("MOV SP,%d\n",sp);printf("CALL main\n");printf("JMP end\n");}
+gdecl   :   DECL decllist ENDDECL {clear_args();sp = st.memory;fprintf(outFile,"MOV SP,%d\n",sp);fprintf(outFile,"CALL main\n");fprintf(outFile,"JMP end\n");}
         ;
 
 decllist : decl decllist {}
@@ -164,6 +166,7 @@ RetStmt : RETURN E ';' {$$ = mkstmtNode(CRET,$2,NULL,NULL);}
 yyerror()
 {
     printf("error");
+    remove(filename);
     return ;
 }
 
@@ -171,7 +174,8 @@ int main(int argc, char *argv[])
 {
     int curr_line = 0;
     yyin = fopen(argv[1],"r");
-
+    outFile = fopen(argv[2],"w");
+    strcpy(filename,argv[2]);
     st.head = NULL;
     st.tail = NULL;
     st.memory = 0;

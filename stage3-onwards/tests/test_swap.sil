@@ -3,7 +3,7 @@ decl
 enddecl
 integer swap(integer &x,&y)
 {
-    decl
+    decl;
         integer temp;
     enddecl
     begin
