@@ -9,7 +9,7 @@
 %%
 
 [0-9]+  {yylval.ival = atoi(yytext);return DIGIT;}
-[%\[\],-<>()*+;=/\{\}]    {return *yytext;}
+[&%\[\],-<>()*+;=/\{\}]    {return *yytext;}
 "AND"   {return AND;}
 "OR"    {return OR;}
 "NOT"   {return NOT;}

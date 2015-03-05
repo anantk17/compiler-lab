@@ -79,6 +79,7 @@ void Linstall(char* name, int type)
         symbol->name = name;
         symbol->type = type;
         symbol->size = 1;
+        symbol->isRef =  0;
         //if(type == 0)
         symbol->binding= lt.memory;//(int*)malloc(sizeof(int)*size);
         symbol->next = NULL;
@@ -96,6 +97,7 @@ void Linstall(char* name, int type)
         symbol->name = name;
         symbol->type = type;
         symbol->size = 1;
+        symbol->isRef = 0;
         //if(type == 0)
             symbol->binding= lt.memory;//(int*)malloc(sizeof(int)*size);
         symbol->next = NULL;
@@ -120,13 +122,13 @@ struct Lsymbol* Llookup(char* name)
 }
 
 
-void addArgs(char* name, int type)
+void addArgs(char* name, int type,int isref)
 {
     struct arg_node* temp;
     temp = (struct arg_node*)malloc(sizeof(struct arg_node));
     temp->name = name;
     temp->type = type;
-    
+    temp->isRef = isref;
     if(alist.head == NULL)
     {
         alist.head = temp;
@@ -139,16 +141,16 @@ void addArgs(char* name, int type)
     }
 }
 
-int lookupArgs(char* name,int type)
+struct arg_node* lookupArgs(char* name,int type)
 {
     struct arg_node* temp;
     
     for(temp = alist.head;temp!=NULL;temp = temp->next)
     {
         if(strcmp(temp->name,name)==0 && type == temp->type)
-            return 1;
+            return temp;
     }
-    return 0;
+    return NULL;
 }
 
 void installArgs(char* name)
@@ -166,7 +168,7 @@ void installArgs(char* name)
     
     while(temp1!= NULL && temp2!=NULL)
     {
-        if(strcmp(temp1->name,temp2->name) != 0 || temp1->type != temp2->type)
+        if(strcmp(temp1->name,temp2->name) != 0 || temp1->type != temp2->type || temp1->isRef != temp2->isRef)
         {
             printf("Argument mismatch in declaration and definition\n");
             exit(1);
@@ -175,6 +177,7 @@ void installArgs(char* name)
         struct Lsymbol* symbol = (struct Lsymbol*)malloc(sizeof(struct Lsymbol));
         symbol->name = temp1->name;
         symbol->type = temp1->type;
+        symbol->isRef = temp1->isRef;
         symbol->size = 1;
 
         if(temp == NULL)
@@ -189,8 +192,9 @@ void installArgs(char* name)
         {
             temp->next = symbol;
             temp = temp->next;
-            temp->next = NULL;
-            temp->binding = lt.argmem;
+            lt.tail = symbol;
+            symbol->next = NULL;
+            symbol->binding = lt.argmem;
             lt.argmem  = lt.argmem - 1;
         }
         temp1 = temp1->next;

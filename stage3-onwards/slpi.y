@@ -79,10 +79,13 @@ decargglist :  decargentry decargglist {}
 decargentry : dtype decargidlist ';' {} 
             ;
 
-decargidlist: ID ',' decargidlist {addArgs($1,type);}
-            |ID {addArgs($1,type);} 
+decargidlist: decargid ',' decargidlist {}
+            | decargid {} 
             ;
 
+decargid : '&'ID    {addArgs($2,type,1);}
+         | ID       {addArgs($1,type,0);}
+        ;
 fdeflist : fdeflist fdef{}
           | {}
           ;
@@ -168,6 +171,7 @@ int main(int argc, char *argv[])
 {
     int curr_line = 0;
     yyin = fopen(argv[1],"r");
+
     st.head = NULL;
     st.tail = NULL;
     st.memory = 0;

@@ -49,6 +49,7 @@ struct tree_node{
     //Pointer to entry in symbol table
     struct Gsymbol* symbol;
     struct Lsymbol* lsymbol;
+    struct arg_node* argptr;
     };
 
 struct tree_node* mkOpNode(int op, struct tree_node* ptr1, struct tree_node* ptr2);

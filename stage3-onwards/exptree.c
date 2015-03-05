@@ -431,6 +431,10 @@ struct tree_node* mkFunc(char* name, struct tree_node* arglist)
                 printf("Error: Argument types do not match \n");
                 exit(1);
             }
+            else
+            {
+                temp1->ptr2->argptr = temp;
+            }
         }
         /*else
         {

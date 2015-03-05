@@ -6,6 +6,7 @@ struct arg_node
 {
     char* name;
     int type;
+    int isRef;
     struct arg_node* next;
 };
 
@@ -38,6 +39,7 @@ struct Lsymbol
     int type;
     int size;
     int binding;
+    int isRef;
     struct Lsymbol *next;
 };
 
@@ -57,11 +59,11 @@ void Linstall(char* name, int type);
 
 struct Lsymbol* Llookup(char* name);
 
-void addArgs(char* name, int type);
+void addArgs(char* name, int type, int isref);
 
 void installArgs(char* name);
 
-int lookupArgs(char* name,int type);
+struct arg_node* lookupArgs(char* name,int type);
 
 void printArgs();
 

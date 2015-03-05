@@ -5,6 +5,7 @@
 
 extern struct LocalTable lt;
 extern struct SymbolTable st;
+extern struct arg_list alist;
 
 int gen_code(struct tree_node* node)
 {
@@ -93,6 +94,7 @@ int gen_code(struct tree_node* node)
         //int addr_reg = current_reg;
         //current_reg++;
         int result_reg = gen_code(node->offset);
+        
         if(node->lsymbol != NULL)
         {
             printf("MOV R%d, %d\n",current_reg,node->lsymbol->binding);
@@ -111,6 +113,10 @@ int gen_code(struct tree_node* node)
                 result_reg = current_reg;
         }
         printf("MOV R%d, [R%d]\n",result_reg,result_reg);
+        if(node->lsymbol->isRef == 1)
+        {
+            printf("MOV R%d, [R%d]\n",result_reg,result_reg);
+        }
 
         current_reg = begin + 1;
         return result_reg;
@@ -145,7 +151,9 @@ int gen_code(struct tree_node* node)
             //int address_reg = current_reg
             //int result_reg1 = gen_code(node->ptr2);
         }
-            printf("MOV [R%d], R%d\n",result_reg, result_reg1);
+        if(node->ptr1->lsymbol->isRef == 1)
+            printf("MOV R%d, [R%d]\n",result_reg,result_reg);
+        printf("MOV [R%d], R%d\n",result_reg, result_reg1);
         current_reg = begin;
         return begin;
     }
@@ -184,6 +192,9 @@ int gen_code(struct tree_node* node)
                 printf("ADD R%d, R%d\n",add_reg,result_reg);
             }
         }
+        if(node->ptr1->lsymbol->isRef == 1)
+            printf("MOV R%d, [R%d]\n",add_reg,add_reg);
+
         printf("MOV [R%d], R%d\n",add_reg,read_val);
 
         current_reg = begin;
@@ -318,12 +329,51 @@ int gen_code(struct tree_node* node)
             i --;
         }
         struct tree_node* temp = node->arglist;
-        while(temp != NULL)
+        struct arg_node* temp1 = node->symbol->args;
+        while(temp != NULL && temp1 != NULL)
         {
-            int ret_reg = gen_code(temp->ptr2);
+            if(temp1->isRef == 1)
+            {
+                if(temp->ptr2->type == CID)
+                {
+                    int result_reg = gen_code(temp->ptr2->offset);
+                    if(temp->ptr2->lsymbol != NULL)
+                    {
+                        current_reg++;
+                        printf("MOV R%d, %d\n",current_reg, temp->ptr2->lsymbol->binding);
+                        int result1 = current_reg;
+                        current_reg++;
+                        printf("MOV R%d, BP\n",current_reg);
+                        printf("ADD R%d, R%d\n",result1,current_reg);
+                        result_reg = result1;
+                    }
+                    else
+                    {
+                        printf("MOV R%d, %d\n", current_reg, temp->ptr2->symbol->binding);
+                        if(result_reg!=-1)
+                        {
+                            printf("ADD R%d, R%d\n", result_reg, current_reg);
+                        }
+                        else
+                        {
+                            result_reg = current_reg;
+                        }
+                    }
+                        printf("PUSH R%d\n",result_reg);
+                        current_reg --;
+            //int address_reg = current_reg
+            //int result_reg1 = gen_code(node->ptr2);
+                    
+                }
+            }
+            else
+            {
+                int ret_reg = gen_code(temp->ptr2);
+                printf("PUSH R%d\n",ret_reg);
+                current_reg--;
+            }
             temp = temp->ptr1;
-            printf("PUSH R%d\n",ret_reg);
-            current_reg--;
+            temp1 = temp1->next;
         }
         printf("PUSH R0\n");
         printf("CALL %s\n",node->name);
