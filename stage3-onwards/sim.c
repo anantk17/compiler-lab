@@ -104,6 +104,11 @@ int gen_code(struct tree_node* node)
             fprintf(outFile,"MOV R%d, BP\n",current_reg);
             fprintf(outFile,"ADD R%d, R%d\n",result1,current_reg);
             result_reg = result1;
+            if(node->lsymbol->isRef == 1)
+            {
+                fprintf(outFile,"MOV R%d, [R%d]\n",result_reg,result_reg);
+            }
+
         }
         else
         {
@@ -114,11 +119,7 @@ int gen_code(struct tree_node* node)
                 result_reg = current_reg;
         }
         fprintf(outFile,"MOV R%d, [R%d]\n",result_reg,result_reg);
-        if(node->lsymbol->isRef == 1)
-        {
-            fprintf(outFile,"MOV R%d, [R%d]\n",result_reg,result_reg);
-        }
-
+        
         current_reg = begin + 1;
         return result_reg;
     }
@@ -137,6 +138,9 @@ int gen_code(struct tree_node* node)
             fprintf(outFile,"MOV R%d, BP\n",current_reg);
             fprintf(outFile,"ADD R%d, R%d\n",result1,current_reg);
             result_reg = result1;
+            if(node->ptr1->lsymbol->isRef == 1)
+                fprintf(outFile,"MOV R%d, [R%d]\n",result_reg,result_reg);
+
         }
         else
         {
@@ -152,8 +156,6 @@ int gen_code(struct tree_node* node)
             //int address_reg = current_reg
             //int result_reg1 = gen_code(node->ptr2);
         }
-        if(node->ptr1->lsymbol->isRef == 1)
-            fprintf(outFile,"MOV R%d, [R%d]\n",result_reg,result_reg);
         fprintf(outFile,"MOV [R%d], R%d\n",result_reg, result_reg1);
         current_reg = begin;
         return begin;
@@ -181,6 +183,9 @@ int gen_code(struct tree_node* node)
             current_reg++;
             fprintf(outFile,"MOV R%d, BP\n",current_reg);
             fprintf(outFile,"ADD R%d, R%d\n",addr,current_reg);
+            if(node->ptr1->lsymbol->isRef == 1)
+                fprintf(outFile,"MOV R%d, [R%d]\n",add_reg,add_reg);
+
         }
         else
         {
@@ -193,9 +198,7 @@ int gen_code(struct tree_node* node)
                 fprintf(outFile,"ADD R%d, R%d\n",add_reg,result_reg);
             }
         }
-        if(node->ptr1->lsymbol->isRef == 1)
-            fprintf(outFile,"MOV R%d, [R%d]\n",add_reg,add_reg);
-
+        
         fprintf(outFile,"MOV [R%d], R%d\n",add_reg,read_val);
 
         current_reg = begin;
