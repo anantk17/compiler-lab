@@ -341,7 +341,18 @@ int gen_code(struct tree_node* node)
                 if(temp->ptr2->type == CID)
                 {
                     int result_reg = gen_code(temp->ptr2->offset);
-                    if(temp->ptr2->lsymbol != NULL)
+                    if(temp->ptr2->lsymbol != NULL && temp->ptr2->lsymbol->isRef == 1)
+                    {
+                        current_reg++;
+                        fprintf(outFile,"MOV R%d, %d\n",current_reg,temp->ptr2->lsymbol->binding);
+                        int result1 = current_reg;
+                        current_reg++;
+                        fprintf(outFile,"MOV R%d, BP\n",current_reg);
+                        fprintf(outFile,"ADD R%d, R%d\n",result1,current_reg);
+                        fprintf(outFile,"MOV R%d, [R%d]\n",result1,result1);
+                        result_reg = result1;
+                    }
+                    else if(temp->ptr2->lsymbol != NULL)
                     {
                         current_reg++;
                         fprintf(outFile,"MOV R%d, %d\n",current_reg, temp->ptr2->lsymbol->binding);

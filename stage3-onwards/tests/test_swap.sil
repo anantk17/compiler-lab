@@ -1,9 +1,11 @@
 decl
     integer swap(integer &x,&y);
+    integer swap1(integer &x,&y);
 enddecl
+
 integer swap(integer &x,&y)
 {
-    decl;
+    decl
         integer temp;
     enddecl
     begin
@@ -11,6 +13,17 @@ integer swap(integer &x,&y)
         x = y;
         y = temp;
         return 0;
+    end
+}
+
+integer swap1(integer &x,&y)
+{
+    decl
+        integer temp;
+    enddecl
+    begin
+        temp = swap(x,y);
+        return temp;
     end
 }
 integer main()
@@ -21,7 +34,7 @@ integer main()
     begin
         read(m);
         read(n);
-        ret = swap(m,n);
+        ret = swap1(m,n);
         write(m);
         write(n);
         return 0;

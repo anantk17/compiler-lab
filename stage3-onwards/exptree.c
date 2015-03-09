@@ -438,6 +438,12 @@ struct tree_node* mkFunc(char* name, struct tree_node* arglist)
     {
         if(temp1->type == CARG)
         {
+            if(temp1->ptr2->type != CID && temp->isRef == 1)
+            {
+                printf("Error: Invalid pass by reference\n");
+                yyerror();
+                exit(1);
+            }
             if(temp1->ptr2->data_type != temp->type)
             {
                 printf("Error: Argument types do not match \n");

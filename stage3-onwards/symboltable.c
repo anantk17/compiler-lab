@@ -153,6 +153,26 @@ struct arg_node* lookupArgs(char* name,int type)
     return NULL;
 }
 
+void recursiveReverse(struct arg_node** head_ref)
+{
+    struct arg_node* first;
+    struct arg_node* rest;
+
+    if(*head_ref == NULL)
+        return;
+
+    first = *head_ref;
+    rest = first->next;
+
+    if(rest == NULL)
+        return;
+    recursiveReverse(&rest);
+    first->next->next = first;
+
+    first->next = NULL;
+    *head_ref = rest;
+}
+
 void installArgs(char* name)
 {
 
@@ -173,6 +193,19 @@ void installArgs(char* name)
             printf("Argument mismatch in declaration and definition\n");
             exit(1);
         }
+        temp1 = temp1->next;
+        temp2 = temp2->next;
+    }
+    if(temp1!= NULL || temp2!=NULL)
+    {
+        printf("Argument mismatch in the declaration and definition sections\n");
+        exit(1);
+    }
+
+    recursiveReverse(&alist.head);
+    temp1 = alist.head;
+    while(temp1!=NULL)
+    {
         struct Lsymbol * temp = lt.tail;
         struct Lsymbol* symbol = (struct Lsymbol*)malloc(sizeof(struct Lsymbol));
         symbol->name = temp1->name;
@@ -197,13 +230,8 @@ void installArgs(char* name)
             symbol->binding = lt.argmem;
             lt.argmem  = lt.argmem - 1;
         }
+
         temp1 = temp1->next;
-        temp2 = temp2->next;
-    }
-    if(temp1!= NULL || temp2!=NULL)
-    {
-        printf("Argument mismatch in the declaration and definition sections\n");
-        exit(1);
     }
 }
 
