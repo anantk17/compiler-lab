@@ -42,7 +42,7 @@ int gen_code(struct tree_node* node)
     }
     else if(node->type == CFUNCDEF)
     {
-        fprintf(outFile,"%s:\n",node->name);
+        fprintf(outFile,"%s:",node->name);
         fprintf(outFile,"PUSH BP\n");
         fprintf(outFile,"MOV BP, SP\n");
         /*printf("MOV R%d, %d\n",current_reg,lt.memory);
@@ -58,7 +58,7 @@ int gen_code(struct tree_node* node)
     }
     else if(node->type == CMAIN)
     {
-        fprintf(outFile,"main:\n");
+        fprintf(outFile,"main:");
         fprintf(outFile,"PUSH BP\n");
         fprintf(outFile,"MOV BP,SP\n");
         int temp = lt.memory;

@@ -1,0 +1,11 @@
+decl
+enddecl
+integer main()
+{
+    decl
+    enddecl
+    begin
+    write(1);
+    return 0;
+    end
+}

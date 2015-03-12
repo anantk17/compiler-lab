@@ -2255,12 +2255,17 @@ yyerror()
 int main(int argc, char *argv[])
 {
     int curr_line = 0;
+    if(argc != 3)
+    {
+        printf("Usage: ./slpi input_filename output_filename\n");
+        exit(1);
+    }
     yyin = fopen(argv[1],"r");
     outFile = fopen(argv[2],"w");
     strcpy(filename,argv[2]);
     st.head = NULL;
     st.tail = NULL;
-    st.memory = 0;
+    st.memory = 1535;
     lt.head = NULL;
     lt.tail = NULL;
     lt.memory = 1;
