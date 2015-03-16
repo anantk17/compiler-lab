@@ -116,7 +116,7 @@ Body : FBEGIN slist RetStmt END {$$ = mkstmtNode(CFUNC,$2,$3,NULL);}
      ;
 
 slist : stmt slist   {$$ = mkstmtNode(CSLIST,$1,$2,NULL);}
-        | stmt      {$$ = $1;}
+        |       {$$ = NULL;}
     ;
 
 stmt : IDT '=' E ';'   {$$ = mkstmtNode(ASSG,$1,$3,NULL);}
